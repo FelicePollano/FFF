@@ -1,4 +1,5 @@
-﻿using Pastel;
+﻿using CommandLine;
+using Pastel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,6 +16,20 @@ namespace fff
 
         static async Task Main(string[] args)
         {
+            var parser = new Parser(with =>
+            {
+                with.EnableDashDash = true;
+                with.HelpWriter = Console.Error;
+                
+            }
+        );
+            
+            var options = parser.ParseArguments<Options>(args);
+
+            options.WithParsed(async opt =>  {
+            
+            
+            
             ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
             
             tasks.Add(Task.Run(() => {
@@ -25,6 +40,8 @@ namespace fff
             {
                 await Task.WhenAll(tasks.ToArray());
             }
+            }
+            );
         }
 
         private static void Explore(string dir, ConcurrentBag<Task> tasks,string filespec,string tosearch)
