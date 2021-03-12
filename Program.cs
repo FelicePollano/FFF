@@ -14,7 +14,7 @@ namespace fff
     {
         static int count = 0;
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             var parser = new Parser(with =>
             {
@@ -22,7 +22,7 @@ namespace fff
                 with.HelpWriter = Console.Error;
                 
             }
-        );
+            );
             
             var options = parser.ParseArguments<Options>(args);
 
