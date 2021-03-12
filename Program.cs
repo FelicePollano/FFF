@@ -15,15 +15,13 @@ namespace fff
     class Program
     {
         static int count = 0;
-        
-
-/// <summary>
-/// 
-/// </summary>
-/// <param name="tosearch">string to search for</param>
-/// <param name="path">path where to search for the string</param>
-/// <param name="files">fiels wildcard to search</param>
-/// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tosearch">string to search for</param>
+        /// <param name="path">path where to search for the string</param>
+        /// <param name="files">fiels wildcard to search</param>
+        /// <returns></returns>
         static async Task Main(string tosearch,string path=".",string[] files=null)
         {
             Stopwatch stopWatch = new Stopwatch();
