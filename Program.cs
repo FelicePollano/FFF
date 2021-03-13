@@ -1,4 +1,5 @@
-﻿using Pastel;
+﻿using CommandLine;
+using Pastel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
