@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace fff
@@ -23,6 +25,8 @@ namespace fff
 /// <returns></returns>
         static async Task Main(string tosearch,string path=".",string[] files=null)
         {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
             if(files==null)
                 files=new string[]{"*.*"};
@@ -34,6 +38,7 @@ namespace fff
             {
                 await Task.WhenAll(tasks.ToArray());
             }
+            Console.Error.WriteLine($"processed {count} files in {stopWatch.Elapsed.ToString()}");
         }
 
         private static void Explore(string dir, ConcurrentBag<Task> tasks,string[] filespec,string tosearch)
@@ -52,6 +57,7 @@ namespace fff
 
         private static async Task Process(string fl,string tosearch)
         {
+            Interlocked.Increment(ref count);
             int linecount = 0;
             List<Result> report = new List<Result>();
             using(var sr = new StreamReader(fl))
