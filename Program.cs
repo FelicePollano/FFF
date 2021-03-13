@@ -13,13 +13,13 @@ namespace fff
     {
         static int count = 0;
 
-        static async Task Main(string[] args)
+        static async Task Main(string tosearch,string path=".",string files="*.*")
         {
             ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
             
             tasks.Add(Task.Run(() => {
 
-                Explore(Directory.GetCurrentDirectory(), tasks,args[0],args[1]);
+                Explore(path, tasks,files,tosearch);
             })); //dir explorer
             while (tasks.Any(t => !t.IsCompleted))
             {
