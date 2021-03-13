@@ -12,6 +12,7 @@ namespace fff
     class Program
     {
         static int count = 0;
+        
 
 /// <summary>
 /// 
@@ -20,10 +21,11 @@ namespace fff
 /// <param name="path">path where to search for the string</param>
 /// <param name="files">fiels wildcard to search</param>
 /// <returns></returns>
-        static async Task Main(string tosearch,string path=".",string files="*.*")
+        static async Task Main(string tosearch,string path=".",string[] files=null)
         {
             ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
-            
+            if(files==null)
+                files=new string[]{"*.*"};
             tasks.Add(Task.Run(() => {
 
                 Explore(path, tasks,files,tosearch);
@@ -34,14 +36,17 @@ namespace fff
             }
         }
 
-        private static void Explore(string dir, ConcurrentBag<Task> tasks,string filespec,string tosearch)
+        private static void Explore(string dir, ConcurrentBag<Task> tasks,string[] filespec,string tosearch)
         {
             var subs = Directory.GetDirectories(dir);
             foreach (var sub in subs)
                 tasks.Add(Task.Run(()=>Explore(sub,tasks,filespec,tosearch)));
-            foreach (var fl in Directory.GetFiles(dir,filespec))
+            foreach(string fc in filespec)
             {
-                tasks.Add(Task.Run(()=>Process(fl,tosearch)));
+                foreach (var fl in Directory.GetFiles(dir,fc))
+                {
+                    tasks.Add(Task.Run(()=>Process(fl,tosearch)));
+                }
             }
         }
 
