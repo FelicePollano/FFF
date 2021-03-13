@@ -37,9 +37,9 @@ namespace fff
             {
                 await Task.WhenAll(tasks.ToArray());
             }
+
             Console.Error.WriteLine($"processed {count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
         }
-
         private static void Explore(string dir, ConcurrentBag<Task> tasks,string[] filespec,string tosearch)
         {
             var subs = Directory.GetDirectories(dir);
