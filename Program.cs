@@ -1,8 +1,9 @@
-﻿using CommandLine;
-using Pastel;
+﻿using Pastel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -22,23 +23,34 @@ namespace fff
         /// <param name="path">path where to search for the string</param>
         /// <param name="files">fiels wildcard to search</param>
         /// <returns></returns>
-        static async Task Main(string tosearch,string path=".",string[] files=null)
+        static async Task Main(string[] args)
         {
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
-            if(files==null)
-                files=new string[]{"*.*"};
-            tasks.Add(Task.Run(() => {
-
-                Explore(path, tasks,files,tosearch);
-            })); //dir explorer
-            while (tasks.Any(t => !t.IsCompleted))
+            var rootCommand = new RootCommand()
             {
-                await Task.WhenAll(tasks.ToArray());
-            }
+                new Argument<string>()
+                new Option<string>("--path",getDefaultValue:()=>Directory.GetCurrentDirectory())
+                ,new Option<string>("--files",getDefaultValue:()=>Directory.GetCurrentDirectory())
+            };
+            
+            rootCommand.Handler= CommandHandler.Create<string>(async (path)=> {
+            
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+                ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
+                if(files==null)
+                    files=new string[]{"*.*"};
+                tasks.Add(Task.Run(() => {
 
-            Console.Error.WriteLine($"processed {count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
+                    Explore(path, tasks,files,tosearch);
+                })); //dir explorer
+                while (tasks.Any(t => !t.IsCompleted))
+                {
+                    await Task.WhenAll(tasks.ToArray());
+                }
+                Console.Error.WriteLine($"processed {count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
+            });
+            await rootCommand.InvokeAsync(args);
+           
         }
         private static void Explore(string dir, ConcurrentBag<Task> tasks,string[] filespec,string tosearch)
         {
