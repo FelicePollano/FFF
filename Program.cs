@@ -27,21 +27,20 @@ namespace fff
         {
             var rootCommand = new RootCommand()
             {
-                new Argument<string>()
-                new Option<string>("--path",getDefaultValue:()=>Directory.GetCurrentDirectory())
-                ,new Option<string>("--files",getDefaultValue:()=>Directory.GetCurrentDirectory())
+                new Argument<string>("search","string to search for")
+                ,new Option<string>(new []{"--path","-p"},getDefaultValue:()=>Directory.GetCurrentDirectory(),"path where to search in")
+                ,new Option<string[]>(new []{"-f","--files"},"file pattern to match to search in"){ Argument=new Argument<string[]>(getDefaultValue:()=>new[]{"*.*"}){Arity=ArgumentArity.ZeroOrMore} }
             };
             
-            rootCommand.Handler= CommandHandler.Create<string>(async (path)=> {
+            rootCommand.Handler= CommandHandler.Create<string,string,string[]>(async (search,path,filepattern)=> {
             
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
-                if(files==null)
-                    files=new string[]{"*.*"};
+               
                 tasks.Add(Task.Run(() => {
 
-                    Explore(path, tasks,files,tosearch);
+                    Explore(path, tasks,filepattern,search);
                 })); //dir explorer
                 while (tasks.Any(t => !t.IsCompleted))
                 {
@@ -49,6 +48,7 @@ namespace fff
                 }
                 Console.Error.WriteLine($"processed {count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
             });
+            rootCommand.Description="Fast Search in Files";
             await rootCommand.InvokeAsync(args);
            
         }
