@@ -74,9 +74,9 @@ namespace fff
             using(var sr = new StreamReader(fl))
             {
                 string line;
-                linecount++;
                 while (null != (line = await sr.ReadLineAsync()))
                 {
+                    linecount++;
                     if (-1 != line.IndexOf(tosearch))
                     {
                         report.Add(new Result() { Line=line,LineNumber=linecount });
