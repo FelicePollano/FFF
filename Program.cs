@@ -27,12 +27,12 @@ namespace fff
         {
             var rootCommand = new RootCommand()
             {
-                new Argument<string>("search","string to search for")
-                ,new Option<string>(new []{"--path","-p"},getDefaultValue:()=>Directory.GetCurrentDirectory(),"path where to search in")
-                ,new Option<string[]>(new []{"-f","--files"},"file pattern to match to search in"){ Argument=new Argument<string[]>(getDefaultValue:()=>new[]{"*.*"}){Arity=ArgumentArity.ZeroOrMore} }
+               new Option<string>(new []{"--path","-p"},getDefaultValue:()=>Directory.GetCurrentDirectory(),"path where to search")
+                ,new Option<string>(new []{"-f","--files"},getDefaultValue:()=>"*.*")
+                ,new Argument<string>("search","string to search for")
             };
             
-            rootCommand.Handler= CommandHandler.Create<string,string,string[]>(async (search,path,filepattern)=> {
+            rootCommand.Handler= CommandHandler.Create<string,string,string>(async (search,path,files)=> {
             
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
@@ -40,7 +40,7 @@ namespace fff
                
                 tasks.Add(Task.Run(() => {
 
-                    Explore(path, tasks,filepattern,search);
+                    Explore(path, tasks,new string[]{files},search);
                 })); //dir explorer
                 while (tasks.Any(t => !t.IsCompleted))
                 {
