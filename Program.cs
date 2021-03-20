@@ -21,7 +21,7 @@ namespace fff
             var rootCommand = new RootCommand()
             {
                new Option<string>(new []{"--path","-p"},getDefaultValue:()=>Directory.GetCurrentDirectory(),"path where to search")
-                ,new Option<string[]>(new []{"-f","--files"},getDefaultValue:()=>new []{"*.*"})
+                ,new Option<string[]>(new []{"-f","--files"},"use double quotes to avoid wildcard expansion, ie \"*.cpp\"")
                 ,new Argument<string>("search","string to search for")
             };
             
@@ -33,7 +33,7 @@ namespace fff
                
                 tasks.Add(Task.Run(() => {
 
-                    Explore(path, tasks,files,search);
+                    Explore(path, tasks,files.Length==0?new []{"*.*"}:files,search);
                 })); //dir explorer
                 while (tasks.Any(t => !t.IsCompleted))
                 {
