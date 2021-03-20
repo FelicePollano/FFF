@@ -8,7 +8,9 @@
   <ItemGroup>
   
     <PackageReference Include="Pastel" Version="2.1.0" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
+    <Reference Include="System.CommandLine">
+      <HintPath>.\Lib\System.CommandLine</HintPath>
+  </Reference>
   </ItemGroup>
 
 </Project>
