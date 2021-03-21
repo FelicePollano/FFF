@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "fff": {
-      "commandName": "Project",
-      "commandLineArgs": "*.prc SP_SSIS_DTX55_DTXFilesCTRs_by_ControlFile_GET",
-      "workingDirectory": "C:\\Users\\felice.pollano\\OVA"
-    }
-  }
-}
