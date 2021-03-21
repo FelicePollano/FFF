@@ -2,7 +2,7 @@
 Fast Find in Files
 
 Fast find in file is a command line utility that uses asynchronous and concurrecny capability to crawl local files for specific string as fast as possible.
-Goal is to conncentrate all computing power into searching the string, in order to report results as fast as possible.
+Goal is to concentrate all computing power into searching the string, in order to report results as fast as possible.
 Th command line tool usage is described with `fff --help`
 
 ```
