@@ -42,7 +42,7 @@ namespace fff
                     }
                     catch(Exception e)
                     {
-                        Console.Error.WriteLine($"Cannot parse {search} as a regular expression:{e}");
+                        Console.Error.WriteLine($"Cannot parse {search} as a regular expression:{e.Message}");
                     }
                 }
                
