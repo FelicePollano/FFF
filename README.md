@@ -33,4 +33,4 @@ In order to build the toolin a single file working without dependencies:
 ## efficency
 By using concurrency and multithreading all resources are optimized to make search as fast as possible.
 Here below an example CPU usage during a search:
-!(https://user-images.githubusercontent.com/73569/112138701-20865680-8bd2-11eb-921a-aaa921bc5852.png)
+![image](https://user-images.githubusercontent.com/73569/112138701-20865680-8bd2-11eb-921a-aaa921bc5852.png)
