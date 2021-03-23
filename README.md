@@ -20,6 +20,7 @@ Options:
   -f, --files <files>    use double quotes to avoid wildcard expansion, ie "*.cpp" [default: *.*]
   -i, --ignore-case      ignore case [default: False]
   -x, --use-regex        use search string as a pattern [default: False]
+  -n, --name-only        just look for file names [default: False]
   --version              Show version information
   -?, -h, --help         Show help and usage information
 ```
