@@ -24,3 +24,9 @@ Options:
   --version              Show version information
   -?, -h, --help         Show help and usage information
 ```
+
+## tool build
+In order to build the toolin a single file working without dependencies:
+
+- Win64 dotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesInSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -c release
+
