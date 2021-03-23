@@ -25,11 +25,12 @@ namespace fff
                 ,new Option<string[]>(new []{"-f","--files"},"use double quotes to avoid wildcard expansion, ie \"*.cpp\" [default: *.*]")
                 ,new Option<bool>(new[]{"-i","--ignore-case"},getDefaultValue:()=>false,"ignore case")
                 ,new Option<bool>(new[]{"-x","--use-regex"},getDefaultValue:()=>false,"use search string as a pattern")
+                ,new Option<bool>(new[]{"-n","--name-only"},getDefaultValue:()=>false,"just look for file names")
                 ,new Argument<string>("search","string to search for")
                 
             };
             
-            rootCommand.Handler= CommandHandler.Create<string,string,string[],bool,bool>(async (search,path,files,ignoreCase,useRegex)=> {
+            rootCommand.Handler= CommandHandler.Create<string,string,string[],bool,bool,bool>(async (search,path,files,ignoreCase,useRegex,nameonly)=> {
                 
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
@@ -48,7 +49,7 @@ namespace fff
                
                 tasks.Add(Task.Run(() => {
 
-                    Explore(path, tasks,files.Length==0?new []{"*.*"}:files,search,ignoreCase,regex);
+                    Explore(path, tasks,files.Length==0?new []{"*.*"}:files,search,ignoreCase,regex,nameonly);
                 })); //dir explorer
                 while (tasks.Any(t => !t.IsCompleted))
                 {
@@ -61,16 +62,16 @@ namespace fff
            
         }
         
-        private static void Explore(string dir, ConcurrentBag<Task> tasks,string[] filespec,string tosearch,bool ignoreCase,Regex regex)
+        private static void Explore(string dir, ConcurrentBag<Task> tasks,string[] filespec,string tosearch,bool ignoreCase,Regex regex, bool nameonly)
         {
             var subs = Directory.GetDirectories(dir);
             foreach (var sub in subs)
-                tasks.Add(Task.Run(()=>Explore(sub,tasks,filespec,tosearch,ignoreCase,regex)));
+                tasks.Add(Task.Run(()=>Explore(sub,tasks,filespec,tosearch,ignoreCase,regex,nameonly)));
             foreach(string fc in filespec)
             {
                 foreach (var fl in Directory.GetFiles(dir,fc))
                 {
-                    tasks.Add(Task.Run(()=>Process(fl,tosearch,ignoreCase,regex)));
+                    tasks.Add(Task.Run(()=>Process(fl,tosearch,ignoreCase,regex,nameonly)));
                 }
             }
         }
@@ -86,21 +87,31 @@ namespace fff
                 return regex.IsMatch(line);
             }
         }
-        private static async Task Process(string fl,string tosearch,bool ignoreCase,Regex regex)
+        private static async Task Process(string fl,string tosearch,bool ignoreCase,Regex regex,bool nameonly)
         {
             Interlocked.Increment(ref count);
             int linecount = 0;
             List<Result> report = new List<Result>();
-            using(var sr = new StreamReader(fl))
+            if(!nameonly)
             {
-                string line;
-                while (null != (line = await sr.ReadLineAsync()))
+                using(var sr = new StreamReader(fl))
                 {
-                    linecount++;
-                    if (IsInString(line,tosearch,ignoreCase,regex))
+                    string line;
+                    while (null != (line = await sr.ReadLineAsync()))
                     {
-                        report.Add(new Result() { Line=line,LineNumber=linecount });
+                        linecount++;
+                        if (IsInString(line,tosearch,ignoreCase,regex))
+                        {
+                            report.Add(new Result() { Line=line,LineNumber=linecount });
+                        }
                     }
+                }
+            }
+            else
+            {
+                if(IsInString(Path.GetFileName(fl),tosearch,ignoreCase,regex))
+                {
+                     report.Add(new Result() { Line=null,LineNumber=0 });//no line number, prevent result being reported...
                 }
             }
             lock ( typeof(Console)) //avoid overlapping in result reporting...
@@ -109,7 +120,10 @@ namespace fff
                     Console.Error.WriteLine($"\t- {fl}".Pastel(Color.BlueViolet));
                 foreach (var r in report)
                 {
-                    Console.Error.WriteLine($" {(r.LineNumber.ToString() + ": ").PastelBg(Color.White).Pastel(Color.Black)} {r.Line}");
+                    if(r.LineNumber>0)
+                    {
+                        Console.Error.WriteLine($" {(r.LineNumber.ToString() + ": ").PastelBg(Color.White).Pastel(Color.Black)} {r.Line}");
+                    }
                 }
             }
         }
