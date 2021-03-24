@@ -34,6 +34,11 @@ namespace fff
             
             rootCommand.Handler= CommandHandler.Create<string,string,string[]>(async (search,path,files)=> {
             
+                await  Task.CompletedTask;
+                if(null==files)
+                    throw new Exception("files is null");
+                    /* original code below */
+                /*              
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
                 ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
@@ -47,6 +52,7 @@ namespace fff
                     await Task.WhenAll(tasks.ToArray());
                 }
                 Console.Error.WriteLine($"processed {count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
+                */
             });
             rootCommand.Description="Fast Search in Files";
             await rootCommand.InvokeAsync(args);
