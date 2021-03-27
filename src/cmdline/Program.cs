@@ -1,4 +1,5 @@
-﻿using Pastel;
+﻿using Fff.Crawler;
+using Pastel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -34,98 +35,41 @@ namespace fff
                 
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
-                ConcurrentBag<Task> tasks = new ConcurrentBag<Task>();
+                
                 Regex regex = null;
+                Crawler crawler;
                 if(useRegex)
                 {
                     try{
                         regex = new Regex(search,ignoreCase?RegexOptions.Compiled|RegexOptions.IgnoreCase:RegexOptions.Compiled);
+                        crawler = new Crawler(files.Length==0?new []{"*.*"}:files,regex,nameonly);
                     }
                     catch(Exception e)
                     {
                         Console.Error.WriteLine($"Cannot parse {search} as a regular expression:{e.Message}");
+                        return;
                     }
                 }
-               
-                tasks.Add(Task.Run(() => {
-
-                    Explore(path, tasks,files.Length==0?new []{"*.*"}:files,search,ignoreCase,regex,nameonly);
-                })); //dir explorer
-                while (tasks.Any(t => !t.IsCompleted))
+                else
                 {
-                    await Task.WhenAll(tasks.ToArray());
+                    crawler = new Crawler(files.Length==0?new []{"*.*"}:files,search,ignoreCase,nameonly);
                 }
+                crawler.Report = (results,file)=>{
+                    Console.Error.WriteLine($"\t- {file}".Pastel(Color.BlueViolet));
+                    foreach (var r in results)
+                    {
+                        if(r.LineNumber>0)
+                        {
+                            Console.Error.WriteLine($" {(r.LineNumber.ToString() + ": ").PastelBg(Color.White).Pastel(Color.Black)} {r.Line}");
+                        }
+                    }
+                };
+                await crawler.Crawl(path);
                 Console.Error.WriteLine($"processed {count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
             });
             rootCommand.Description="Fast Search in Files";
             await rootCommand.InvokeAsync(args);
            
-        }
-        
-        private static void Explore(string dir, ConcurrentBag<Task> tasks,string[] filespec,string tosearch,bool ignoreCase,Regex regex, bool nameonly)
-        {
-            var subs = Directory.GetDirectories(dir);
-            foreach (var sub in subs)
-                tasks.Add(Task.Run(()=>Explore(sub,tasks,filespec,tosearch,ignoreCase,regex,nameonly)));
-            foreach(string fc in filespec)
-            {
-                foreach (var fl in Directory.GetFiles(dir,fc))
-                {
-                    tasks.Add(Task.Run(()=>Process(fl,tosearch,ignoreCase,regex,nameonly)));
-                }
-            }
-        }
-
-        private static bool IsInString(string line,string search,bool ignoreCase,Regex regex)
-        {
-            if(regex == null)
-            {
-                return -1 != line.IndexOf(search,ignoreCase?StringComparison.OrdinalIgnoreCase:StringComparison.Ordinal);
-            }
-            else
-            {
-                return regex.IsMatch(line);
-            }
-        }
-        private static async Task Process(string fl,string tosearch,bool ignoreCase,Regex regex,bool nameonly)
-        {
-            Interlocked.Increment(ref count);
-            int linecount = 0;
-            List<Result> report = new List<Result>();
-            if(!nameonly)
-            {
-                using(var sr = new StreamReader(fl))
-                {
-                    string line;
-                    while (null != (line = await sr.ReadLineAsync()))
-                    {
-                        linecount++;
-                        if (IsInString(line,tosearch,ignoreCase,regex))
-                        {
-                            report.Add(new Result() { Line=line,LineNumber=linecount });
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if(IsInString(Path.GetFileName(fl),tosearch,ignoreCase,regex))
-                {
-                     report.Add(new Result() { Line=null,LineNumber=0 });//no line number, prevent result being reported...
-                }
-            }
-            lock ( typeof(Console)) //avoid overlapping in result reporting...
-            {
-                if(report.Count>0)
-                    Console.Error.WriteLine($"\t- {fl}".Pastel(Color.BlueViolet));
-                foreach (var r in report)
-                {
-                    if(r.LineNumber>0)
-                    {
-                        Console.Error.WriteLine($" {(r.LineNumber.ToString() + ": ").PastelBg(Color.White).Pastel(Color.Black)} {r.Line}");
-                    }
-                }
-            }
         }
     }
 }
