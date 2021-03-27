@@ -27,8 +27,9 @@ Options:
 
 ## tool build
 In order to build the toolin a single file working without dependencies:
+please note this is guarantee to work for https://github.com/FelicePollano/FFF/tree/latest-cmdline-only branch only at the moment
 
-- Win64 dotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesInSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -c release
+- Win64: dotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesInSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -c release
 
 ## efficency
 By using concurrency and multithreading all resources are optimized to make search as fast as possible.
