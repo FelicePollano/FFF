@@ -46,7 +46,7 @@ namespace fff_ui
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
