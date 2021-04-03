@@ -64,7 +64,7 @@ namespace fff
                     }
                 };
                 await crawler.Crawl(path);
-                Console.Error.WriteLine($"processed {count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
+                Console.Error.WriteLine($"processed {crawler.Count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
             });
             rootCommand.Description="Fast Search in Files";
             await rootCommand.InvokeAsync(args);
