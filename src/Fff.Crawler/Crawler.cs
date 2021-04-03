@@ -18,6 +18,8 @@ namespace Fff.Crawler
         private readonly Regex regex;
         private readonly bool nameonly;
         private int count;
+
+        public int Count { get{ return count;}  }
         ConcurrentBag<Task> tasks;
         Action<IList<Result>,string> report;
         public Crawler(string[] filespec,Regex regex, bool nameonly)
