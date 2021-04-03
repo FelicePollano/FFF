@@ -17,7 +17,6 @@ namespace fff
 {
     class Program
     {
-        static int count = 0;
         static async Task Main(string[] args)
         {
             var rootCommand = new RootCommand()
