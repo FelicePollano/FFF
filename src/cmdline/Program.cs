@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,11 +27,12 @@ namespace fff
                 ,new Option<bool>(new[]{"-i","--ignore-case"},getDefaultValue:()=>false,"ignore case")
                 ,new Option<bool>(new[]{"-x","--use-regex"},getDefaultValue:()=>false,"use search string as a pattern")
                 ,new Option<bool>(new[]{"-n","--name-only"},getDefaultValue:()=>false,"just look for file names")
+                ,new Option<bool>(new[]{"-j","--json"},getDefaultValue:()=>false,"output in json without coloring")
                 ,new Argument<string>("search","string to search for")
                 
             };
             
-            rootCommand.Handler= CommandHandler.Create<string,string,string[],bool,bool,bool>(async (search,path,files,ignoreCase,useRegex,nameonly)=> {
+            rootCommand.Handler= CommandHandler.Create<string,string,string[],bool,bool,bool,bool>(async (search,path,files,ignoreCase,useRegex,nameonly,json)=> {
                 
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
@@ -54,13 +56,18 @@ namespace fff
                     crawler = new Crawler(files.Length==0?new []{"*.*"}:files,search,ignoreCase,nameonly);
                 }
                 crawler.Report = (results,file)=>{
-                    Console.Error.WriteLine($"\t- {file}".Pastel(Color.BlueViolet));
-                    foreach (var r in results)
-                    {
-                        if(r.LineNumber>0)
+                    if(!json){
+                        Console.Error.WriteLine($"\t- {file}".Pastel(Color.BlueViolet));
+                        foreach (var r in results)
                         {
-                            Console.Error.WriteLine($" {(r.LineNumber.ToString() + ": ").PastelBg(Color.White).Pastel(Color.Black)} {r.Line}");
+                            if(r.LineNumber>0)
+                            {
+                                Console.Error.WriteLine($" {(r.LineNumber.ToString() + ": ").PastelBg(Color.White).Pastel(Color.Black)} {r.Line}");
+                            }
                         }
+                    }
+                    else{
+                        Console.Out.WriteLine(JsonSerializer.Serialize(new{file=file,findings=results}));
                     }
                 };
                 await crawler.Crawl(path);
