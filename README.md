@@ -21,6 +21,7 @@ Options:
   -i, --ignore-case      ignore case [default: False]
   -x, --use-regex        use search string as a pattern [default: False]
   -n, --name-only        just look for file names [default: False]
+  -j, --json             output in json without coloring [default: False]
   --version              Show version information
   -?, -h, --help         Show help and usage information
 ```
