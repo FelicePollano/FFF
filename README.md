@@ -27,8 +27,9 @@ Options:
 ```
 
 ## VSCode ADDIN
-Providing that fff is available to launch on your system ( ie install in path or /usr/local/bin) there is an available extension you can download from the Release package, exposing the command FFF. This allow you to search and point and click to go to the search results.
-This is a fast search alternative to the one provided by vscode itself
+Providing that fff is available to launch on your system ( ie install in path or /usr/local/bin) there is an available extension you can download from the Release, or in the path src/vscode-addin/fff/fff-x.x.x.vsix, exposing the command FFF. This allow you to search and point and click to go to the found results.
+This is a fast search alternative to the one provided by vscode itself.
+
 ![image](https://user-images.githubusercontent.com/73569/149669270-8d389d38-c0aa-43ba-86eb-c2303a6dc504.png)
 
 ## tool build
