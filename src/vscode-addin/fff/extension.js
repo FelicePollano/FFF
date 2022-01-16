@@ -21,18 +21,21 @@ function activate(context) {
 			
 			fffout.show();
 			fffout.clear();
+			var results = vscode.window.createWebviewPanel("fff","FFF "+ret,vscode.ViewColumn.One,{enableScripts:true});
+			results.webview.html=getWebviewContent();
 			let path = '';
 			if(vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length>0)
 			{
 				path = ' -p "'+vscode.workspace.workspaceFolders[0].uri.fsPath+'" '
 				fffout.appendLine("searhing in:"+path)
 			}
-			var p = spawn('fff '+ret+path,{ shell: true })
+			var p = spawn('fff -j '+ret+path,{ shell: true })
 			
 			p.stderr.setEncoding('utf8');
-			p.stderr.setEncoding('utf8');
+			p.stdout.setEncoding('utf8');
 			p.stdout.on('data', line=>{
-				//fffout.appendLine(line)
+				results.webview.postMessage(JSON.parse(line));
+				
 			});
 			p.stderr.on('data', line=>{
 				 
@@ -54,7 +57,38 @@ function activate(context) {
 
 	context.subscriptions.push(disposable);
 }
+function getWebviewContent() {
+	return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+	  <meta charset="UTF-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  
+  </head>
+  <body>
+  	
+	  <script>
+	  
+	  
+	  window.addEventListener('message', event => {
+        
+		const find = event.data; // The JSON data our extension sent
+		
+		var fileDiv = document.createElement('div');
+		fileDiv.setAttribute('class','fileContainer')
+		var p = document.createElement('h3');
+		var textNode = document.createTextNode(find.file); 
+		p.appendChild(textNode);
+		fileDiv.appendChild(p);
+		document.body.appendChild(fileDiv);
+		
 
+		
+	});
+	  </script>
+  </body>
+  </html>`;
+  }
 // this method is called when your extension is deactivated
 function deactivate() {}
 
