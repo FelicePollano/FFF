@@ -21,13 +21,21 @@ function activate(context) {
 			
 			fffout.show();
 			fffout.clear();
-			var results = vscode.window.createWebviewPanel("fff","FFF "+ret,vscode.ViewColumn.One,{enableScripts:true});
+			var results = vscode.window.createWebviewPanel("fff","FFF "+ret,vscode.ViewColumn.One,{enableScripts:true,retainContextWhenHidden: true});
 			results.webview.html=getWebviewContent();
 
 			results.webview.onDidReceiveMessage(
 				message => {
-				  fffout.appendLine(message.file);
-				  fffout.appendLine(message.line);
+				
+				  var uri = vscode.Uri.file(message.file);
+				  
+				  vscode.window.showTextDocument(uri).then(editor=>{
+					var pos1 = new vscode.Position(message.line-1,0);
+					editor.selections = [new vscode.Selection(pos1,pos1)]; 
+					var range = new vscode.Range(pos1, pos1);
+					editor.revealRange(range);
+				  });
+				  
 				},
 				undefined,
 				context.subscriptions
