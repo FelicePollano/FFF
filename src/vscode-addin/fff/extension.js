@@ -23,6 +23,17 @@ function activate(context) {
 			fffout.clear();
 			var results = vscode.window.createWebviewPanel("fff","FFF "+ret,vscode.ViewColumn.One,{enableScripts:true});
 			results.webview.html=getWebviewContent();
+
+			results.webview.onDidReceiveMessage(
+				message => {
+				  fffout.appendLine(message.file);
+				  fffout.appendLine(message.line);
+				},
+				undefined,
+				context.subscriptions
+			  );
+
+
 			let path = '';
 			if(vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length>0)
 			{
@@ -35,7 +46,6 @@ function activate(context) {
 			p.stdout.setEncoding('utf8');
 			p.stdout.on('data', line=>{
 				results.webview.postMessage(JSON.parse(line));
-				
 			});
 			p.stderr.on('data', line=>{
 				 
@@ -68,7 +78,7 @@ function getWebviewContent() {
   <body>
   	
 	  <script>
-	  
+	  const vscode = acquireVsCodeApi();
 	  
 	  window.addEventListener('message', event => {
         
@@ -81,7 +91,16 @@ function getWebviewContent() {
 		p.appendChild(textNode);
 		fileDiv.appendChild(p);
 		document.body.appendChild(fileDiv);
-		
+		for (let i = 0; i <= find.findings.length; i++) {
+			var p2 = document.createElement('p');
+			p2.textContent=find.findings[i].LineNumber+': ';
+			var a = document.createElement('a');
+            a.textContent=find.findings[i].Line
+			fileDiv.appendChild(p2);
+			p2.appendChild(a);
+			a.setAttribute('href','javascript:void(0);')
+			a.setAttribute('onclick','javascript:vscode.postMessage({file:"'+    find.file+'",line:'+find.findings[i].LineNumber +'});');
+		}
 
 		
 	});
