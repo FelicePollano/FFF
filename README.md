@@ -26,6 +26,11 @@ Options:
   -?, -h, --help         Show help and usage information
 ```
 
+## VSCode ADDIN
+Providing that fff is available to launch on your system ( ie install in path or /usr/local/bin) there is an available extension you can download from the Release package, exposing the command FFF. This allow you to search and point and click to go to the search results.
+This is a fast search alternative to the one provided by vscode itself
+![image](https://user-images.githubusercontent.com/73569/149669270-8d389d38-c0aa-43ba-86eb-c2303a6dc504.png)
+
 ## tool build
 In order to build the toolin a single file working without dependencies:
 please note this is guarantee to work for https://github.com/FelicePollano/FFF/tree/latest-cmdline-only branch only at the moment
