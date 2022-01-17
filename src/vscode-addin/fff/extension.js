@@ -26,9 +26,9 @@ function activate(context) {
 
 			results.webview.onDidReceiveMessage(
 				message => {
-				
+				 
 				  var uri = vscode.Uri.file(message.file);
-				  
+				  fffout.appendLine(message.file);
 				  vscode.window.showTextDocument(uri).then(editor=>{
 					var pos1 = new vscode.Position(message.line-1,0);
 					editor.selections = [new vscode.Selection(pos1,pos1)]; 
@@ -106,8 +106,10 @@ function getWebviewContent() {
             a.textContent=find.findings[i].Line
 			fileDiv.appendChild(p2);
 			p2.appendChild(a);
+			var escaped = find.file;
+			escaped = escaped.replace(/\\\\/g,'\\\\\\\\');
 			a.setAttribute('href','javascript:void(0);')
-			a.setAttribute('onclick','javascript:vscode.postMessage({file:"'+    find.file+'",line:'+find.findings[i].LineNumber +'});');
+			a.setAttribute('onclick','javascript:vscode.postMessage({file:"'+escaped+'",line:'+find.findings[i].LineNumber +'});');
 		}
 
 		
