@@ -2,7 +2,7 @@
 	"name": "fff",
 	"displayName": "fff",
 	"description": "Fast File Finder addin",
-	"version": "0.0.1",
+	"version": "1.0.1",
 	"engines": {
 		"vscode": "^1.63.0"
 	},
