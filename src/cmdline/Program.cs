@@ -68,9 +68,11 @@ namespace fff
                     }
                     else{
                         Console.Out.WriteLine(JsonSerializer.Serialize(new{file=file,findings=results}));
+                        Console.Out.Flush();
                     }
                 };
                 await crawler.Crawl(path);
+                Console.Out.Flush();
                 Console.Error.WriteLine($"processed {crawler.Count.ToString().Pastel(Color.CadetBlue)} files in {stopWatch.Elapsed.ToString().Pastel(Color.Chocolate)} seconds.");
             });
             rootCommand.Description="Fast Search in Files";
