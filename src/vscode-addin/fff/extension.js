@@ -28,7 +28,7 @@ function activate(context) {
 				message => {
 				 
 				  var uri = vscode.Uri.file(message.file);
-				  fffout.appendLine(message.file);
+				  
 				  vscode.window.showTextDocument(uri).then(editor=>{
 					var pos1 = new vscode.Position(message.line-1,0);
 					editor.selections = [new vscode.Selection(pos1,pos1)]; 
@@ -52,8 +52,24 @@ function activate(context) {
 			
 			p.stderr.setEncoding('utf8');
 			p.stdout.setEncoding('utf8');
+			var residual = '';
 			p.stdout.on('data', line=>{
-				results.webview.postMessage(JSON.parse(line));
+				var chunks = line.split(/\r?\n/);
+				for(let i=0;i<chunks.length;++i){
+					if(i==0){
+						results.webview.postMessage(JSON.parse(residual+chunks[i]));
+						residual='';
+					}else
+					if(i<chunks.length-1){
+						results.webview.postMessage(JSON.parse(chunks[i]));
+					}else{
+						if(line.endsWith('\r')||line.endsWith('\r')){
+							results.webview.postMessage(JSON.parse(chunks[i]));
+						}else{
+							residual = chunks[i];
+						}
+					}
+				}
 			});
 			p.stderr.on('data', line=>{
 				 
@@ -67,6 +83,9 @@ function activate(context) {
 				}else
 					fffout.appendLine(line)
 			})
+			p.on('close', (code) => {
+				fffout.appendLine(`child process close all stdio with code ${code}`);
+			  });
 			
 			
 			
