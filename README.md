@@ -32,9 +32,23 @@ This is a fast search alternative to the one provided by vscode itself.
 
 ![image](https://user-images.githubusercontent.com/73569/149669270-8d389d38-c0aa-43ba-86eb-c2303a6dc504.png)
 
+In order to package the vsaddin you need to install node and python,  and follow these steps:
+```
+npm install -g vsce 
+```
+then move in the folder src\vscode-addin\fff
+and run 
+```
+npm install
+vsce package
+```
+This will produce a vsix with the version according to what is in package.json. 
+The vsix can then be installed in vscode by the menu Extensions/Triple Dot/Install from vsix...
+
+
 ## tool build
 In order to build the toolin a single file working without dependencies:
-please note this is guarantee to work for https://github.com/FelicePollano/FFF/tree/latest-cmdline-only branch only at the moment
+
 
 - Win64: dotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesInSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -c release
 
