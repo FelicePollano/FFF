@@ -123,6 +123,7 @@ function getWebviewContent() {
 			p2.textContent=find.findings[i].LineNumber+': ';
 			var a = document.createElement('a');
             a.textContent=find.findings[i].Line
+			a.setAttribute('class','show-file-icons')
 			fileDiv.appendChild(p2);
 			p2.appendChild(a);
 			var escaped = find.file;
