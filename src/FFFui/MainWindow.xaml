@@ -5,17 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFFui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="800" Width="1200">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"></RowDefinition>
+            <RowDefinition Height="32"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="24"></RowDefinition>
         </Grid.RowDefinitions>
-        <TabControl SelectedIndex="{Binding Path=Selected}" Grid.Row="1" ItemsSource="{Binding Tabs}">
+        <TabControl SelectedIndex="{Binding Path=Selected}" Grid.Row="2" ItemsSource="{Binding Tabs}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <Label>
@@ -32,12 +33,20 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Label>Search:</Label>
             <TextBox Margin="2,2,2,2" Width="290" Text="{Binding Path=ToSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <CheckBox Margin="2,6,2,2">Regex</CheckBox>
-            <CheckBox Margin="2,6,2,2">Match case</CheckBox>
-            <CheckBox Margin="2,6,2,2">Name only</CheckBox>
+            <CheckBox Margin="2,6,2,2" IsChecked="{Binding Path=UseRegex}">Regex</CheckBox>
+            <CheckBox Margin="2,6,2,2"  IsChecked="{Binding Path=MatchCase}">Match case</CheckBox>
+            <CheckBox Margin="2,6,2,2" IsChecked="{Binding Path=NameOnly}">Name only</CheckBox>
+            <Label>File Types:</Label>
+            <TextBox Margin="2,2,2,2" Width="40" Text="{Binding Path=Types, Mode=TwoWay}"></TextBox>
             <Button HorizontalAlignment="Right" Margin="2,4,2,4" Command="{Binding Path=Search}" >Search</Button>
         </StackPanel>
-        <StackPanel Background="Gray" Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label>Path:</Label>
+            <TextBox Margin="2,2,2,2" Width="490" Text="{Binding Path=Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+          
+            <Button HorizontalAlignment="Right" Width="30" Margin="2,4,2,4" Command="{Binding Path=ChangePath}" >...</Button>
+        </StackPanel>
+        <StackPanel Background="Gray" Grid.Row="3" Orientation="Horizontal">
             <Label></Label>
         </StackPanel>
 
