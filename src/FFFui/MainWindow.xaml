@@ -26,7 +26,7 @@
             </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=ToSearch}"></TextBlock>
+                    <local:ResultsView DataContext="{Binding Path=Results}"/>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

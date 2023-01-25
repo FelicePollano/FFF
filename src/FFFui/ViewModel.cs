@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace FFFui
 {
@@ -80,7 +82,8 @@ namespace FFFui
 
             public async void Execute(object? parameter)
             {
-                model.Tabs.Add(new SearchViewModel(model.ToSearch));
+                var viewModel = new SearchViewModel(model.ToSearch);
+                model.Tabs.Add(viewModel);
                 model.Selected = model.Tabs.Count - 1;
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
@@ -97,7 +100,8 @@ namespace FFFui
                     }
                     catch (Exception e)
                     {
-                        Console.Error.WriteLine($"Cannot parse {model.ToSearch} as a regular expression:{e.Message}");
+                        throw;
+                        //Console.Error.WriteLine($"Cannot parse {model.ToSearch} as a regular expression:{e.Message}");
                         return;
                     }
                 }
@@ -105,7 +109,10 @@ namespace FFFui
                 {
                     crawler = new Crawler(files.Length == 0 ? new[] { "*.*" } : files, model.ToSearch, !model.MatchCase, model.NameOnly);
                 }
+                var uiContext = SynchronizationContext.Current;
                 crawler.Report = (results, file) => {
+
+                    uiContext.Send(x => viewModel.Results.Add(new ResultModel() { Results = results, FileName = file }), null);
                     
                 };
                 
@@ -179,6 +186,8 @@ namespace FFFui
             get { return tabs; }
             set { tabs = value; }
         }
+
+       
 
 
         public bool UseRegex
