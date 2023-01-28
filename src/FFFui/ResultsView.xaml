@@ -6,7 +6,12 @@
              xmlns:local="clr-namespace:FFFui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        
+        
+    </UserControl.Resources>
     <ListView ItemsSource="{Binding .}">
+        
         <ListView.ItemTemplate>
             <DataTemplate>
                 <StackPanel>
@@ -19,15 +24,18 @@
                     <ListView ItemsSource="{Binding Results}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                            <TextBlock>
+                                <TextBlock>
                                 <Hyperlink>
-                                    <StackPanel Orientation="Horizontal">
-                                    <Label><Binding Path="LineNumber"></Binding></Label>
-                                    <Label>:</Label>
-                                    <Label><Binding Path="Line"></Binding></Label>
-                                    </StackPanel>
-                                </Hyperlink>
-                            </TextBlock>
+                                        <Run>
+                                            <Binding Path="LineNumber"></Binding>
+                                        </Run>
+                                 </Hyperlink>
+                                        <Run FontWeight="Bold">:</Run>
+                                        <Run>
+                                            <Binding Path="Line"></Binding>
+                                        </Run>
+                                   
+                                </TextBlock>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
