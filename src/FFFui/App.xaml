@@ -6,8 +6,8 @@
              
              >
     <Application.Resources>
-      
-        <ResourceDictionary>
+        
+        <ResourceDictionary >
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Classic;component/themes/Classic.xaml" />
             </ResourceDictionary.MergedDictionaries>

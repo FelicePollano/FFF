@@ -7,11 +7,38 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        
+        <Style x:Key="ItemContainerStyle1" TargetType="ListViewItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border
+                         BorderBrush="Gray"
+                         BorderThickness="1"
+                         Background="{TemplateBinding Background}">
+                            <GridViewRowPresenter HorizontalAlignment="Stretch" Height="49"  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Width="Auto" Margin="0" Content="{TemplateBinding Content}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         
     </UserControl.Resources>
-    <ListView ItemsSource="{Binding .}">
-        
+    <ListView ItemsSource="{Binding .}" >
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                                <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ListView.ItemContainerStyle>
+
         <ListView.ItemTemplate>
             <DataTemplate>
                 <StackPanel>
@@ -21,21 +48,37 @@
                         </TextBlock>
                         </Hyperlink>
                     </TextBlock>
-                    <ListView ItemsSource="{Binding Results}">
+                    <ListView ItemsSource="{Binding Results}" >
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                                                <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="LightYellow"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock>
-                                <Hyperlink>
-                                        <Run>
-                                            <Binding Path="LineNumber"></Binding>
-                                        </Run>
-                                 </Hyperlink>
-                                        <Run FontWeight="Bold">:</Run>
-                                        <Run>
-                                            <Binding Path="Line"></Binding>
-                                        </Run>
-                                   
-                                </TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock>
+                                            <Run  FontWeight="Bold">
+                                                <Binding Path="LineNumber"></Binding>
+                                            </Run>
+                                            <Run FontWeight="Bold">:</Run>
+                                    </TextBlock>
+                                    <TextBox Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding Line}"/>
+                                </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
