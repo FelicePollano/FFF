@@ -58,15 +58,22 @@ namespace Fff.Crawler
 
         private  void Explore(string dir)
         {
-            var subs = Directory.GetDirectories(dir);
-            foreach (var sub in subs)
-                tasks.Add(Task.Run(()=>Explore(sub)));
-            foreach(string fc in filespec)
+            try
             {
-                foreach (var fl in Directory.GetFiles(dir,fc))
+                var subs = Directory.GetDirectories(dir);
+                foreach (var sub in subs)
+                    tasks.Add(Task.Run(() => Explore(sub)));
+                foreach (string fc in filespec)
                 {
-                    tasks.Add(Task.Run(()=>Process(fl)));
+                    foreach (var fl in Directory.GetFiles(dir, fc))
+                    {
+                        tasks.Add(Task.Run(() => Process(fl)));
+                    }
                 }
+            }
+            catch (UnauthorizedAccessException )
+            {
+                //swallow these exceptions, behave as directory does not exist
             }
         }
 
