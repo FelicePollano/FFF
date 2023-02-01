@@ -13,6 +13,7 @@ using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Windows.Threading;
 using System.Threading;
+using AutoMapper;
 
 namespace FFFui
 {
@@ -112,7 +113,7 @@ namespace FFFui
                 var uiContext = SynchronizationContext.Current;
                 crawler.Report = (results, file) => {
 
-                    uiContext.Send(x => viewModel.Results.Add(new ResultModel() { Results = results, FileName = file }), null);
+                    uiContext.Send(x => viewModel.Results.Add(new ResultModel() { Results = TheMapper.Mapper.Map<IList<Result>,IList<ResultLineModel>>(results), FileName = file }), null);
                     
                 };
                 

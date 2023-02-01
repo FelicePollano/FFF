@@ -11,10 +11,10 @@ namespace FFFui
     {
         public ResultModel()
         {
-            Results=new List<Result>();
+            Results=new List<ResultLineModel>();
             FileName = String.Empty;
         }
-        public IList<Result> Results { get; set; }
+        public IList<ResultLineModel> Results { get; set; }
         public string FileName { get; set; }
     }
 }

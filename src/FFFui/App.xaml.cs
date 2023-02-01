@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AutoMapper;
+using Fff.Crawler;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -19,6 +21,7 @@ namespace FFFui
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            
         }
        
     }
