@@ -29,7 +29,7 @@ namespace FFFui
             Environment.SetEnvironmentVariable("file", model.FileName);
             Environment.SetEnvironmentVariable("line", "1");
             Process process = new Process();
-            var cmdLine = Settings.Instance.GetCommandLineForOpening(Path.GetExtension(model.FileName));
+            var cmdLine = Settings.Instance.GetCommandLineForOpening(Path.GetExtension(model.FileName).Trim('.'));
             ProcessStartInfo startInfo = new ProcessStartInfo(
                     Environment.ExpandEnvironmentVariables(cmdLine.Item1),
                     Environment.ExpandEnvironmentVariables(cmdLine.Item2));

@@ -1,0 +1,10 @@
+﻿[extension]
+open.cmd=%WINDIR%\system32\notepad.exe 
+open.cmdline=%file%
+open.atline.cmd=%WINDIR%\system32\notepad.exe 
+open.atline.cmdline=%file%
+[extension "cs,cpp,h,rc,c,vb,xaml,xml,xslt,sql"]
+open.cmd=%programfiles%\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe
+open.cmdline="/edit \"%file%\"
+open.atline.cmd=%programfiles%\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe
+open.atline.cmdline="/edit "%file%" "Edit.Goto %line%"
