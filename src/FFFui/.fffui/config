@@ -1,10 +1,10 @@
 ﻿[extension]
-open-cmd=%WINDIR%\system32\notepad.exe 
+open-cmd="%programfiles%\\Microsoft VS Code\\Code.exe" 
 open-cmdline=%file%
-open-atline-cmd=%WINDIR%\system32\notepad.exe 
-open-atline-cmdline=%file%
+open-atline-cmd="%programfiles%\\Microsoft VS Code\\Code.exe" 
+open-atline-cmdline="--goto \"%file%\:%line%:1""
 [extension "cs,cpp,h,rc,c,vb,xaml,xml,xslt,sql"]
 open-cmd="%programfiles%\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\devenv.exe"
 open-cmdline="/edit \"%file%\""
 open-atline-cmd="%programfiles%\\Microsoft Visual Studio\\2022\\Professional\\Common7\\IDE\\devenv.exe"
-open-atline-cmdline="/edit \"%file%\" \"Edit.Goto %line%\""
+open-atline-cmdline="/edit \"%file%\" /command \"Edit.Goto %line%\""

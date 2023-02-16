@@ -84,9 +84,9 @@
                                         
                                     </TextBox>
                                     -->
-                                    <Button Content="{Binding Line}" >
+                                    <Button Content="{Binding Line}" Command="{Binding OpenAtLine}" CommandParameter="{Binding RelativeSource={RelativeSource  AncestorLevel=2, AncestorType=Control},Path=DataContext.FileName}">
                                         <Button.Template>
-                                            <ControlTemplate TargetType="{x:Type Button}">
+                                            <ControlTemplate TargetType="{x:Type Button}"  >
                                                 <ContentPresenter />
                                             </ControlTemplate>
                                         </Button.Template>

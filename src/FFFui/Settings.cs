@@ -15,6 +15,18 @@ namespace FFFui
         Dictionary<string, Tuple<string, string>> extensionMapFile = new Dictionary<string, Tuple<string, string>>();
         Dictionary<string, Tuple<string, string>> extensionMapAtLine = new Dictionary<string, Tuple<string, string>>();
         static Settings instance;
+        public static Settings Instance
+        {
+            get
+            {
+                lock (typeof(Settings))
+                {
+                    if (null == instance)
+                        instance = new Settings();
+                    return instance;
+                }
+            }
+        }
         private Settings()
         {
             var cfgPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".fffui/config");
@@ -69,24 +81,25 @@ namespace FFFui
                 }
             }
         }
-        public static Settings Instance {
-            get 
-            {
-                lock (typeof(Settings))
-                {
-                    if( null == instance )
-                        instance = new Settings();
-                    return instance;
-                }
-            }
+
+        public Tuple<string,string> GetCommandLineForOpeningAtLine(string extensionWithoutDot)
+        {
+            return GetCmd(extensionWithoutDot, extensionMapAtLine);
         }
+
+        private static Tuple<string, string> GetCmd(string extensionWithoutDot, Dictionary<string, Tuple<string, string>> dict)
+        {
+            if (dict.ContainsKey(extensionWithoutDot))
+                return dict[extensionWithoutDot];
+            if (dict.ContainsKey("<default>"))
+                return dict["<default>"];
+            throw new Exception($"Can't handle extension .{extensionWithoutDot}");
+        }
+
+       
         public Tuple<string,string> GetCommandLineForOpening(string extensionWithoutDot)
         {
-            if (extensionMapFile.ContainsKey(extensionWithoutDot))
-                return extensionMapFile[extensionWithoutDot];
-            if(extensionMapFile.ContainsKey("<default>"))
-                return extensionMapFile["<default>"];
-            throw new Exception($"Can't handle extension .{extensionWithoutDot}");
+            return GetCmd(extensionWithoutDot, extensionMapAtLine);
         }
     }
 }
