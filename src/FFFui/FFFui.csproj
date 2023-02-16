@@ -5,12 +5,11 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\eskimo.ico</ApplicationIcon>
   </PropertyGroup>
 
- 
-
   <ItemGroup>
-    <Folder Include="Images\" />
+    <Content Include="Images\eskimo.ico" />
   </ItemGroup>
 	<ItemGroup>
 	  <None Include=".fffui\config">
