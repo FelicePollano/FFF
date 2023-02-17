@@ -9,6 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\clone-figure.png" />
+    <None Remove="Images\compare.png" />
+    <None Remove="Images\icons8-compare-50.png" />
+    <None Remove="Images\icons8-console-50.png" />
+    <None Remove="Images\open-file-under-cursor.png" />
+    <None Remove="Images\opened-folder.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Images\eskimo.ico" />
   </ItemGroup>
 	<ItemGroup>
@@ -24,6 +33,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fff.Crawler\Fff.Crawler.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\clone-figure.png" />
+    <Resource Include="Images\compare.png" />
+    <Resource Include="Images\icons8-compare-50.png" />
+    <Resource Include="Images\icons8-console-50.png" />
+    <Resource Include="Images\open-file-under-cursor.png" />
+    <Resource Include="Images\opened-folder.png" />
   </ItemGroup>
 
 </Project>
