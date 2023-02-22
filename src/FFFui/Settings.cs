@@ -14,6 +14,7 @@ namespace FFFui
     {
         Dictionary<string, Tuple<string, string>> extensionMapFile = new Dictionary<string, Tuple<string, string>>();
         Dictionary<string, Tuple<string, string>> extensionMapAtLine = new Dictionary<string, Tuple<string, string>>();
+        Tuple<string, string> compareCmd = new Tuple<string, string>(null, null);
         static Settings instance;
         public static Settings Instance
         {
@@ -35,6 +36,12 @@ namespace FFFui
             {
                 config.Add(sr.ReadToEnd());
             }
+
+            if (config.Sections.ContainsKey("compare"))
+            {
+                compareCmd = new Tuple<string, string>(config.Sections["compare"]["cmd"], config.Sections["compare"]["cmdline"]);
+            }
+
             if (config.Sections.ContainsKey("extension"))
             {
                 if (config.Sections["extension"].ContainsKey("open-cmd"))
@@ -81,7 +88,10 @@ namespace FFFui
                 }
             }
         }
-
+        public Tuple<string, string> GetCommandForCompare()
+        {
+            return compareCmd;
+        }
         public Tuple<string,string> GetCommandLineForOpeningAtLine(string extensionWithoutDot)
         {
             return GetCmd(extensionWithoutDot, extensionMapAtLine);

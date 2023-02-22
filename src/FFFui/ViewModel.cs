@@ -113,7 +113,7 @@ namespace FFFui
                 var uiContext = SynchronizationContext.Current;
                 crawler.Report = (results, file) => {
 
-                    uiContext.Send(x => viewModel.Results.Add(new ResultModel() { Results = TheMapper.Mapper.Map<IList<Result>,IList<ResultLineModel>>(results), FileName = file }), null);
+                    uiContext.Send(x => viewModel.Results.Add(new ResultModel(model.CompareSourceViewModel) { Results = TheMapper.Mapper.Map<IList<Result>,IList<ResultLineModel>>(results), FileName = file }), null);
                     
                 };
                 
@@ -128,6 +128,9 @@ namespace FFFui
         private int selected;
         private string types;
         private string path;
+
+
+        public CompareSourceViewModel CompareSourceViewModel { get; private set; }
 
         public int Selected
         {
@@ -175,6 +178,7 @@ namespace FFFui
             Search = new SearchCommand(this);
             ChangePath = new ChangePathCommand(this);
             tabs = new ObservableCollection<SearchViewModel>();
+            CompareSourceViewModel = new CompareSourceViewModel();
         }
         public event PropertyChangedEventHandler? PropertyChanged;
         private bool useRegex;

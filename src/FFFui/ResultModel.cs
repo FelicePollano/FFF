@@ -1,6 +1,7 @@
 ﻿using Fff.Crawler;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -76,6 +77,59 @@ namespace FFFui
             process.Start();
         }
     }
+    class AddToCompareCommand:ICommand
+    {
+        private readonly ResultModel model;
+
+        public AddToCompareCommand(ResultModel model)
+        {
+            this.model = model;
+        }
+
+        public event EventHandler? CanExecuteChanged;
+
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object? parameter)
+        {
+            if (model.FileName == model.CompareSourceViewModel.FileName1 ||
+                model.FileName == model.CompareSourceViewModel.FileName2
+                )
+            {
+                //toggle
+                if (model.CompareSourceViewModel.FileName1 == model.FileName)
+                {
+                    model.CompareSourceViewModel.FileName1 =null;
+                    model.FireCompareChanged();
+                    return;
+                }
+
+                if (model.CompareSourceViewModel.FileName2 == model.FileName)
+                {
+                    model.CompareSourceViewModel.FileName2 = null;
+                    model.FireCompareChanged();
+                    return;
+                }
+            }
+            if (model.CompareSourceViewModel.FileName1 == null)
+            {
+                model.CompareSourceViewModel.FileName1 = model.FileName;
+                model.FireCompareChanged();
+                return;
+            }
+           
+            if (model.CompareSourceViewModel.FileName2 == null)
+            {
+                model.CompareSourceViewModel.FileName2 = model.FileName;
+                model.FireCompareChanged();
+                return;
+            }
+            
+        }
+    }
     class OpenFileCommand : ICommand
     {
         ResultModel model;
@@ -104,13 +158,18 @@ namespace FFFui
         }
     }
 
-    internal class ResultModel
+    internal class ResultModel:INotifyPropertyChanged
     {
+        private readonly CompareSourceViewModel csvm;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public OpenFileCommand OpenFile { get; private set; }
         public CopyLinkCommand CopyLink { get; private set; }
         public OpenInExplorerCommand OpenInExplorer { get; private set; }
         public OpenPromptHereCommand OpenPromptHere { get; private set; }
-        public ResultModel()
+        public AddToCompareCommand AddToCompare { get; private set; }
+        public ResultModel(CompareSourceViewModel csvm)
         {
             Results=new List<ResultLineModel>();
             FileName = String.Empty;
@@ -118,8 +177,20 @@ namespace FFFui
             CopyLink = new CopyLinkCommand(this);
             OpenInExplorer = new OpenInExplorerCommand(this);
             OpenPromptHere = new OpenPromptHereCommand(this);
+            AddToCompare = new AddToCompareCommand(this);
+            this.csvm = csvm;
         }
         public IList<ResultLineModel> Results { get; set; }
         public string FileName { get; set; }
+        public bool IsCompareSource { get => CompareSourceViewModel.FileName1 == FileName || CompareSourceViewModel.FileName2 == FileName; }
+        public int CompareSourceOrdinal { get => CompareSourceViewModel.FileName1 == FileName ? 1: (CompareSourceViewModel.FileName2==FileName ? 2:0 );  }
+
+        public CompareSourceViewModel CompareSourceViewModel => csvm;
+
+        public void FireCompareChanged()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCompareSource)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompareSourceOrdinal)));
+        }
     }
 }

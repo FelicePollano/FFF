@@ -7,17 +7,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <BitmapImage x:Key="OpenFile" UriSource="Images/open-file-under-cursor.png"></BitmapImage>
         <BitmapImage x:Key="CopyLink" UriSource="Images/clone-figure.png"></BitmapImage>
         <BitmapImage x:Key="AddToCompare" UriSource="Images/compare.png"></BitmapImage>
         <BitmapImage x:Key="Compare" UriSource="Images/icons8-compare-50.png"></BitmapImage>
         <BitmapImage x:Key="OpenInCmd" UriSource="Images/icons8-console-50.png"></BitmapImage>
         <BitmapImage x:Key="OpenInExplorer" UriSource="Images/opened-folder.png"></BitmapImage>
-       
+        <Style x:Key="BorderCompare" TargetType="Border">
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Background" Value="LightGreen"/>
+        </Style>
+
         <Style x:Key="ButtonFlat" TargetType="Button">
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Margin" Value="2,0,2,0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Margin" Value="2,0,2,0"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
         <Style x:Key="OverHighlight" TargetType="StackPanel">
@@ -79,16 +86,33 @@
                             <Button ToolTip="Copy Link" Style="{StaticResource ButtonFlat}"  Command="{Binding CopyLink}" >
                                 <Image Width="16" Height="16" Source="{StaticResource CopyLink}"></Image>
                             </Button>
-                            <Button ToolTip="Use as compare item" Style="{StaticResource ButtonFlat}"  Command="{Binding AddToCmpare}" >
+                            <Button ToolTip="Use as compare item" Style="{StaticResource ButtonFlat}"  Command="{Binding AddToCompare}" >
                                 <Image Width="16" Height="16" Source="{StaticResource AddToCompare}"></Image>
                             </Button>
                         </StackPanel>
-                        <TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>
                             <Hyperlink Command="{Binding OpenFile}">
                             <TextBlock Text="{Binding FileName}">
                             </TextBlock>
                             </Hyperlink>
-                        </TextBlock>
+                             </TextBlock>
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding IsCompareSource, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Margin="20,0,0,0" FontWeight="Bold">========></TextBlock>
+                            <Border Style="{StaticResource BorderCompare}" >
+                                <TextBlock>
+                                   
+                                    <Hyperlink Command="{Binding Path=CompareSourceViewModel.RunCompare}">
+                                        <TextBlock FontSize="10" FontWeight="Bold">
+                                            <Run>Compare</Run>
+                                            <Run Text="{Binding CompareSourceOrdinal, Mode=OneWay}"></Run>
+                                        </TextBlock>
+                                    </Hyperlink>
+                                            
+                                </TextBlock>
+                            </Border>
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
                     <ListView ItemsSource="{Binding Results}" >
 
@@ -126,15 +150,7 @@
                                        
                                     </StackPanel>
                                     <TextBox  Background="Transparent" BorderThickness="0" IsReadOnly="True" Text="{Binding Line}"/>
-                                    <!--
-                                    <Button Content="{Binding Line}" Command="{Binding OpenAtLine}" CommandParameter="{Binding RelativeSource={RelativeSource  AncestorLevel=2, AncestorType=Control},Path=DataContext.FileName}">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="{x:Type Button}"  >
-                                                <ContentPresenter />
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
-                                   -->
+                                   
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
