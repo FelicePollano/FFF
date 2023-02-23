@@ -101,8 +101,8 @@ namespace FFFui
                     }
                     catch (Exception e)
                     {
-                        throw;
-                        //Console.Error.WriteLine($"Cannot parse {model.ToSearch} as a regular expression:{e.Message}");
+                        model.HasErrors = true;
+                        model.ErrorMessage = e.ToString();
                         return;
                     }
                 }
@@ -116,8 +116,16 @@ namespace FFFui
                     uiContext.Send(x => viewModel.Results.Add(new ResultModel(model.CompareSourceViewModel) { Results = TheMapper.Mapper.Map<IList<Result>,IList<ResultLineModel>>(results), FileName = file }), null);
                     
                 };
-                
-                await crawler.Crawl(model.Path);
+                try
+                {
+                    await crawler.Crawl(model.Path);
+                }
+                catch (Exception e)
+                {
+                    model.HasErrors = true;
+                    model.ErrorMessage = e.ToString();
+                    return;
+                }
 
             }
 
@@ -180,6 +188,20 @@ namespace FFFui
             tabs = new ObservableCollection<SearchViewModel>();
             CompareSourceViewModel = new CompareSourceViewModel();
         }
+
+        bool hasErrors;
+        public bool HasErrors
+        {
+            get { return hasErrors; }
+            set { hasErrors = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasErrors))); }
+        }
+        string errorMessage;
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+            set { errorMessage = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ErrorMessage))); }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         private bool useRegex;
         private bool matchCase;

@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFFui"
-       
+        Name="mainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1200">
     <Window.Resources>
-       
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <Style  TargetType="ListView">
             <Setter Property="BorderThickness" Value="0"></Setter>
            
@@ -26,7 +26,8 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="24"></RowDefinition>
         </Grid.RowDefinitions>
-        <TabControl SelectedIndex="{Binding Path=Selected}" Grid.Row="2" ItemsSource="{Binding Tabs}">
+       
+        <TabControl  SelectedIndex="{Binding Path=Selected}" Grid.Row="2" ItemsSource="{Binding Tabs}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <Label>
@@ -40,6 +41,9 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
+        <Popup DataContext="{Binding}" PlacementTarget="{Binding ElementName=mainWindow}" Placement="Center" HorizontalAlignment="Center"  VerticalAlignment="Center" IsOpen="{Binding HasErrors}" StaysOpen="False" AllowsTransparency="True">
+            <local:ErrorPopup></local:ErrorPopup>
+        </Popup>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Label>Search:</Label>
             <TextBox Margin="2,2,2,2" Width="290" Text="{Binding Path=ToSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
