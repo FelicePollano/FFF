@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace FFFui
 {
-    internal class RunCompareCommand : ICommand
+    public class RunCompareCommand : ICommand
     {
         private readonly CompareSourceViewModel model;
 
@@ -41,7 +41,7 @@ namespace FFFui
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
-    internal class CompareSourceViewModel
+    public class CompareSourceViewModel
     {
         public RunCompareCommand RunCompare { get; set; }
         public CompareSourceViewModel()

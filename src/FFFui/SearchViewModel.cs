@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FFFui
 {
-    internal class SearchViewModel : INotifyPropertyChanged
+    public class SearchViewModel : INotifyPropertyChanged
     {
         public string ToSearch { get; private set; }
         public SearchViewModel(string toSearch)

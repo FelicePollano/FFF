@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace FFFui
 {
-    class CopyLinkCommand : ICommand
+    public class CopyLinkCommand : ICommand
     {
         ResultModel model;
         public CopyLinkCommand(ResultModel model)
@@ -28,10 +28,18 @@ namespace FFFui
 
         public void Execute(object? parameter)
         {
-            Clipboard.SetText(model.FileName);
+            try
+            {
+                Clipboard.SetText(model.FileName);
+            }
+            catch (Exception ex)
+            {
+                model.MainViewModel.HasErrors = true;
+                model.MainViewModel.ErrorMessage = ex.Message;
+            }
         }
     }
-    class OpenInExplorerCommand : ICommand
+    public class OpenInExplorerCommand : ICommand
     {
         ResultModel model;
         public OpenInExplorerCommand(ResultModel model)
@@ -47,10 +55,18 @@ namespace FFFui
 
         public void Execute(object? parameter)
         {
-            System.Diagnostics.Process.Start("explorer.exe",Path.GetDirectoryName(model.FileName));
-        }
+            try
+            {
+                System.Diagnostics.Process.Start("explorer.exe", Path.GetDirectoryName(model.FileName));
+            }
+            catch (Exception ex)
+            {
+                model.MainViewModel.HasErrors = true;
+                model.MainViewModel.ErrorMessage = ex.Message;
+            }
+}
     }
-    class OpenPromptHereCommand : ICommand
+    public class OpenPromptHereCommand : ICommand
     {
         ResultModel model;
         public OpenPromptHereCommand(ResultModel model)
@@ -66,18 +82,29 @@ namespace FFFui
 
         public void Execute(object? parameter)
         {
-            var process = new System.Diagnostics.Process();
-            process.StartInfo = new System.Diagnostics.ProcessStartInfo
+            try
             {
-                WorkingDirectory = Path.GetDirectoryName(model.FileName),
-                WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal,
-                FileName = "cmd.exe",
-               
-            };
-            process.Start();
+                var process = new System.Diagnostics.Process();
+                process.StartInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    WorkingDirectory = Path.GetDirectoryName(model.FileName),
+                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal,
+                    FileName = "cmd.exe",
+
+                };
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                model.MainViewModel.HasErrors = true;
+                model.MainViewModel.ErrorMessage = ex.Message;
+            }
+
+
+
         }
     }
-    class AddToCompareCommand:ICommand
+    public class AddToCompareCommand:ICommand
     {
         private readonly ResultModel model;
 
@@ -95,42 +122,50 @@ namespace FFFui
 
         public void Execute(object? parameter)
         {
-            if (model.FileName == model.CompareSourceViewModel.FileName1 ||
-                model.FileName == model.CompareSourceViewModel.FileName2
-                )
+            try
             {
-                //toggle
-                if (model.CompareSourceViewModel.FileName1 == model.FileName)
+                if (model.FileName == model.CompareSourceViewModel.FileName1 ||
+                    model.FileName == model.CompareSourceViewModel.FileName2
+                    )
                 {
-                    model.CompareSourceViewModel.FileName1 =null;
+                    //toggle
+                    if (model.CompareSourceViewModel.FileName1 == model.FileName)
+                    {
+                        model.CompareSourceViewModel.FileName1 = null;
+                        model.FireCompareChanged();
+                        return;
+                    }
+
+                    if (model.CompareSourceViewModel.FileName2 == model.FileName)
+                    {
+                        model.CompareSourceViewModel.FileName2 = null;
+                        model.FireCompareChanged();
+                        return;
+                    }
+                }
+                if (model.CompareSourceViewModel.FileName1 == null)
+                {
+                    model.CompareSourceViewModel.FileName1 = model.FileName;
                     model.FireCompareChanged();
                     return;
                 }
 
-                if (model.CompareSourceViewModel.FileName2 == model.FileName)
+                if (model.CompareSourceViewModel.FileName2 == null)
                 {
-                    model.CompareSourceViewModel.FileName2 = null;
+                    model.CompareSourceViewModel.FileName2 = model.FileName;
                     model.FireCompareChanged();
                     return;
                 }
             }
-            if (model.CompareSourceViewModel.FileName1 == null)
+            catch (Exception ex)
             {
-                model.CompareSourceViewModel.FileName1 = model.FileName;
-                model.FireCompareChanged();
-                return;
+                model.MainViewModel.HasErrors = true;
+                model.MainViewModel.ErrorMessage = ex.Message;
             }
-           
-            if (model.CompareSourceViewModel.FileName2 == null)
-            {
-                model.CompareSourceViewModel.FileName2 = model.FileName;
-                model.FireCompareChanged();
-                return;
-            }
-            
+
         }
     }
-    class OpenFileCommand : ICommand
+    public class OpenFileCommand : ICommand
     {
         ResultModel model;
         public OpenFileCommand(ResultModel model)
@@ -146,21 +181,30 @@ namespace FFFui
 
         public void Execute(object? parameter)
         {
-            Environment.SetEnvironmentVariable("file", model.FileName);
-            Environment.SetEnvironmentVariable("line", "1");
-            Process process = new Process();
-            var cmdLine = Settings.Instance.GetCommandLineForOpening(Path.GetExtension(model.FileName).Trim('.'));
-            ProcessStartInfo startInfo = new ProcessStartInfo(
-                    Environment.ExpandEnvironmentVariables(cmdLine.Item1),
-                    Environment.ExpandEnvironmentVariables(cmdLine.Item2));
-            process.StartInfo = startInfo;
-            process.Start();
+            try
+            {
+                Environment.SetEnvironmentVariable("file", model.FileName);
+                Environment.SetEnvironmentVariable("line", "1");
+                Process process = new Process();
+                var cmdLine = Settings.Instance.GetCommandLineForOpening(Path.GetExtension(model.FileName).Trim('.'));
+                ProcessStartInfo startInfo = new ProcessStartInfo(
+                        Environment.ExpandEnvironmentVariables(cmdLine.Item1),
+                        Environment.ExpandEnvironmentVariables(cmdLine.Item2));
+                process.StartInfo = startInfo;
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                model.MainViewModel.HasErrors = true;
+                model.MainViewModel.ErrorMessage = ex.Message;
+            }
         }
     }
 
-    internal class ResultModel:INotifyPropertyChanged
+    public class ResultModel:INotifyPropertyChanged
     {
         private readonly CompareSourceViewModel csvm;
+        private readonly ViewModel mainViewModel;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -169,7 +213,7 @@ namespace FFFui
         public OpenInExplorerCommand OpenInExplorer { get; private set; }
         public OpenPromptHereCommand OpenPromptHere { get; private set; }
         public AddToCompareCommand AddToCompare { get; private set; }
-        public ResultModel(CompareSourceViewModel csvm)
+        public ResultModel(CompareSourceViewModel csvm,ViewModel mainViewModel)
         {
             Results=new List<ResultLineModel>();
             FileName = String.Empty;
@@ -179,6 +223,7 @@ namespace FFFui
             OpenPromptHere = new OpenPromptHereCommand(this);
             AddToCompare = new AddToCompareCommand(this);
             this.csvm = csvm;
+            this.mainViewModel = mainViewModel;
         }
         public IList<ResultLineModel> Results { get; set; }
         public string FileName { get; set; }
@@ -186,6 +231,8 @@ namespace FFFui
         public int CompareSourceOrdinal { get => CompareSourceViewModel.FileName1 == FileName ? 1: (CompareSourceViewModel.FileName2==FileName ? 2:0 );  }
 
         public CompareSourceViewModel CompareSourceViewModel => csvm;
+
+        public ViewModel MainViewModel => mainViewModel;
 
         public void FireCompareChanged()
         {

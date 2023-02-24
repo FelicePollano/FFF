@@ -61,7 +61,11 @@
             <Button HorizontalAlignment="Right" Width="30" Margin="2,4,2,4" Command="{Binding Path=ChangePath}" >...</Button>
         </StackPanel>
         <StackPanel Background="Gray" Grid.Row="3" Orientation="Horizontal">
-            <Label></Label>
+            <TextBlock Foreground="White" FontSize="10" Visibility="{Binding IsSearching, Converter={StaticResource BoolToVis}}">
+                <Run>Searching:</Run>
+                <Run FontWeight="Bold" Text="{Binding RunningSearch}"></Run>
+                <Run>Running</Run>
+            </TextBlock>
         </StackPanel>
 
     </Grid>

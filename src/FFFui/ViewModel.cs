@@ -18,7 +18,7 @@ using AutoMapper;
 namespace FFFui
 {
 
-    internal class ViewModel : INotifyPropertyChanged
+    public class ViewModel : INotifyPropertyChanged
     {
         class ChangePathCommand : ICommand
         {
@@ -36,7 +36,7 @@ namespace FFFui
 
             public void Execute(object? parameter)
             {
-                
+
 
                 var dlg = new CommonOpenFileDialog();
                 dlg.Title = "Select Folder";
@@ -55,7 +55,7 @@ namespace FFFui
 
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                   model.Path = dlg.FileName;
+                    model.Path = dlg.FileName;
                 }
             }
         }
@@ -91,12 +91,12 @@ namespace FFFui
 
                 Regex regex;
                 Crawler crawler;
-                var files = string.IsNullOrEmpty(model.Types)?new string[0]: model.Types.Split(';');
+                var files = string.IsNullOrEmpty(model.Types) ? new string[0] : model.Types.Split(';');
                 if (model.UseRegex)
                 {
                     try
                     {
-                        regex = new Regex(model.ToSearch ,!model.MatchCase?RegexOptions.Compiled | RegexOptions.IgnoreCase : RegexOptions.Compiled);
+                        regex = new Regex(model.ToSearch, !model.MatchCase ? RegexOptions.Compiled | RegexOptions.IgnoreCase : RegexOptions.Compiled);
                         crawler = new Crawler(files.Length == 0 ? new[] { "*.*" } : files, regex, model.NameOnly);
                     }
                     catch (Exception e)
@@ -111,14 +111,22 @@ namespace FFFui
                     crawler = new Crawler(files.Length == 0 ? new[] { "*.*" } : files, model.ToSearch, !model.MatchCase, model.NameOnly);
                 }
                 var uiContext = SynchronizationContext.Current;
-                crawler.Report = (results, file) => {
+                crawler.Report = (results, file) =>
+                {
+                    var rm = new ResultModel(model.CompareSourceViewModel, model) { Results = TheMapper.Mapper.Map<IList<Result>, IList<ResultLineModel>>(results), FileName = file };
+                    //this is bad
+                    foreach (var rlm in rm.Results)
+                    {
+                        rlm.MainViewModel = model;
+                    }
+                    uiContext.Send(x => viewModel.Results.Add(rm), null);
 
-                    uiContext.Send(x => viewModel.Results.Add(new ResultModel(model.CompareSourceViewModel) { Results = TheMapper.Mapper.Map<IList<Result>,IList<ResultLineModel>>(results), FileName = file }), null);
-                    
                 };
                 try
                 {
+                    model.RunningSearch++;
                     await crawler.Crawl(model.Path);
+                    model.RunningSearch--;
                 }
                 catch (Exception e)
                 {
@@ -143,8 +151,8 @@ namespace FFFui
         public int Selected
         {
             get { return selected; }
-            set 
-            { 
+            set
+            {
                 selected = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selected)));
             }
@@ -153,7 +161,8 @@ namespace FFFui
         public string ToSearch
         {
             get { return toSearch; }
-            set {
+            set
+            {
                 toSearch = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ToSearch)));
             }
@@ -207,24 +216,28 @@ namespace FFFui
         private bool matchCase;
         private bool nameOnly;
         private ObservableCollection<SearchViewModel> tabs;
+        private int runningSearch;
+        private bool isSearching;
 
-        public ObservableCollection<SearchViewModel>  Tabs
+        public ObservableCollection<SearchViewModel> Tabs
         {
             get { return tabs; }
             set { tabs = value; }
         }
 
-       
+
 
 
         public bool UseRegex
         {
-            get { 
+            get
+            {
                 return useRegex;
             }
-            set {
+            set
+            {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UseRegex)));
-                useRegex = value; 
+                useRegex = value;
             }
         }
         public bool MatchCase
@@ -251,6 +264,17 @@ namespace FFFui
                 nameOnly = value;
             }
         }
-
+        public bool IsSearching { get => isSearching; set => isSearching = value; }
+        public int RunningSearch
+        {
+            get => runningSearch;
+            set
+            {
+                runningSearch = value;
+                isSearching = runningSearch != 0;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RunningSearch)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSearching)));
+            }
+        }
     }
 }
