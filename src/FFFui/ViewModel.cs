@@ -20,6 +20,7 @@ namespace FFFui
 
     public class ViewModel : INotifyPropertyChanged
     {
+       
         class ChangePathCommand : ICommand
         {
             ViewModel model;
@@ -83,9 +84,10 @@ namespace FFFui
 
             public async void Execute(object? parameter)
             {
-                var viewModel = new SearchViewModel(model.ToSearch);
+                var viewModel = new SearchViewModel(model.ToSearch,this.model);
                 model.Tabs.Add(viewModel);
                 model.Selected = model.Tabs.Count - 1;
+                
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
 
@@ -188,6 +190,7 @@ namespace FFFui
 
         public ICommand Search { get; private set; }
         public ICommand ChangePath { get; private set; }
+        
 
         public ViewModel()
         {

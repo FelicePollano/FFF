@@ -13,8 +13,13 @@
             <Setter Property="BorderThickness" Value="0"></Setter>
            
         </Style>
-        
-
+        <Style x:Key="ButtonFlat" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="3,0,0,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <BitmapImage x:Key="CloseTab" UriSource="Images/icons8-close-window-24.png"></BitmapImage>
     </Window.Resources>
     <Window.DataContext>
         <local:ViewModel/>
@@ -30,12 +35,15 @@
         <TabControl  SelectedIndex="{Binding Path=Selected}" Grid.Row="2" ItemsSource="{Binding Tabs}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <Label>
-                        <Binding Path="ToSearch"/>
-                    </Label>
+                    <StackPanel Orientation="Horizontal" Height="21">
+                        <TextBlock Text="{Binding ToSearch}"/>
+                        <Button Style="{StaticResource ButtonFlat}"  Command="{Binding CloseTab}">
+                            <Image Source="{StaticResource CloseTab}" Width="16" Height="16"/>
+                        </Button>
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
+            <TabControl.ContentTemplate>
                 <DataTemplate>
                     <local:ResultsView DataContext="{Binding Path=Results}"/>
                 </DataTemplate>
