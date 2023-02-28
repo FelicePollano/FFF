@@ -60,6 +60,18 @@ namespace FFFui
                 }
             }
         }
+
+        public void UpdateAllCompare()
+        {
+            foreach (var tab in Tabs)
+            {
+                foreach (var res in tab.Results)
+                {
+                    res.FireCompareChanged();
+                }
+            }
+        }
+
         class SearchCommand : ICommand
         {
             ViewModel model;

@@ -29,6 +29,24 @@ namespace FFFui
         public void Execute(object? parameter)
         {
             model.Tabs.Remove(searchViewModel);
+            RemoveFromCompareSource();
+        }
+
+        private void RemoveFromCompareSource()
+        {
+            foreach (var one in searchViewModel.Results)
+            {
+                if (one.FileName == model.CompareSourceViewModel.FileName1)
+                {
+                    model.CompareSourceViewModel.FileName1 = null;
+                    model.UpdateAllCompare();
+                }
+                else if (one.FileName == model.CompareSourceViewModel.FileName2)
+                {
+                    model.CompareSourceViewModel.FileName2 = null;
+                    model.UpdateAllCompare();
+                }
+            }
         }
     }
     public class SearchViewModel : INotifyPropertyChanged

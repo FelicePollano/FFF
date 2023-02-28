@@ -16,15 +16,15 @@
         <BitmapImage x:Key="OpenInExplorer" UriSource="Images/opened-folder.png"></BitmapImage>
         <Style x:Key="BorderCompare" TargetType="Border">
             <Setter Property="Margin" Value="10,0,0,0"/>
-            
+
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Background" Value="LightGreen"/>
         </Style>
 
         <Style x:Key="ButtonFlat" TargetType="Button">
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Margin" Value="2,0,2,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="2,0,2,0"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
         <Style x:Key="OverHighlight" TargetType="StackPanel">
@@ -50,9 +50,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
     </UserControl.Resources>
-    <ListView ItemsSource="{Binding .}" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+    
+    <ListView Grid.Row="0" ItemsSource="{Binding .}" >
         <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
                 <Setter Property="Template">
@@ -159,4 +165,5 @@
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
+    </Grid>
 </UserControl>
