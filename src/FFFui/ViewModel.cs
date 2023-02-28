@@ -198,7 +198,7 @@ namespace FFFui
             Search = new SearchCommand(this);
             ChangePath = new ChangePathCommand(this);
             tabs = new ObservableCollection<SearchViewModel>();
-            CompareSourceViewModel = new CompareSourceViewModel();
+            CompareSourceViewModel = new CompareSourceViewModel(this);
         }
 
         bool hasErrors;

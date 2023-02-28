@@ -11,10 +11,12 @@ namespace FFFui
     public class RunCompareCommand : ICommand
     {
         private readonly CompareSourceViewModel model;
+        private readonly ViewModel mainViewModel;
 
-        public RunCompareCommand(CompareSourceViewModel model)
+        public RunCompareCommand(CompareSourceViewModel model,ViewModel mainViewModel)
         {
             this.model = model;
+            this.mainViewModel = mainViewModel;
         }
         public event EventHandler? CanExecuteChanged;
 
@@ -25,15 +27,23 @@ namespace FFFui
 
         public void Execute(object? parameter)
         {
-            Environment.SetEnvironmentVariable("file1",model.FileName1);
-            Environment.SetEnvironmentVariable("file2", model.FileName2);
-            Process process = new Process();
-            var cmdLine = Settings.Instance.GetCommandForCompare();
-            ProcessStartInfo startInfo = new ProcessStartInfo(
-                    Environment.ExpandEnvironmentVariables(cmdLine.Item1),
-                    Environment.ExpandEnvironmentVariables(cmdLine.Item2));
-            process.StartInfo = startInfo;
-            process.Start();
+            try
+            {
+                Environment.SetEnvironmentVariable("file1", model.FileName1);
+                Environment.SetEnvironmentVariable("file2", model.FileName2);
+                Process process = new Process();
+                var cmdLine = Settings.Instance.GetCommandForCompare();
+                ProcessStartInfo startInfo = new ProcessStartInfo(
+                        Environment.ExpandEnvironmentVariables(cmdLine.Item1),
+                        Environment.ExpandEnvironmentVariables(cmdLine.Item2));
+                process.StartInfo = startInfo;
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                mainViewModel.HasErrors = true;
+                mainViewModel.ErrorMessage = ex.ToString();
+            }
         }
 
         internal void FireChanged()
@@ -44,9 +54,9 @@ namespace FFFui
     public class CompareSourceViewModel
     {
         public RunCompareCommand RunCompare { get; set; }
-        public CompareSourceViewModel()
+        public CompareSourceViewModel(ViewModel mainViewModel)
         {
-            RunCompare = new RunCompareCommand(this);
+            RunCompare = new RunCompareCommand(this,mainViewModel);
         }
         private string fileName1;
         private string fileName2;
