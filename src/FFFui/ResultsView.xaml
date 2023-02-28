@@ -14,6 +14,7 @@
         <BitmapImage x:Key="Compare" UriSource="Images/icons8-compare-50.png"></BitmapImage>
         <BitmapImage x:Key="OpenInCmd" UriSource="Images/icons8-console-50.png"></BitmapImage>
         <BitmapImage x:Key="OpenInExplorer" UriSource="Images/opened-folder.png"></BitmapImage>
+        <BitmapImage x:Key="OpenHistory" UriSource="Images/icons8-code-fork-24.png"></BitmapImage>
         <Style x:Key="BorderCompare" TargetType="Border">
             <Setter Property="Margin" Value="10,0,0,0"/>
 
@@ -95,7 +96,10 @@
                             <Button ToolTip="Use as compare item" Style="{StaticResource ButtonFlat}"  Command="{Binding AddToCompare}" >
                                 <Image Width="16" Height="16" Source="{StaticResource AddToCompare}"></Image>
                             </Button>
-                        </StackPanel>
+                            <Button ToolTip="Open repository history" Style="{StaticResource ButtonFlat}"  Command="{Binding OpenHistory}" >
+                                <Image Width="16" Height="16" Source="{StaticResource OpenHistory}"></Image>
+                            </Button>
+                            </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock>
                             <Hyperlink Command="{Binding OpenFile}">

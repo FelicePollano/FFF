@@ -12,6 +12,7 @@
     <None Remove="Images\clone-figure.png" />
     <None Remove="Images\compare.png" />
     <None Remove="Images\icons8-close-window-24.png" />
+    <None Remove="Images\icons8-code-fork-24.png" />
     <None Remove="Images\icons8-compare-50.png" />
     <None Remove="Images\icons8-console-50.png" />
     <None Remove="Images\open-file-under-cursor.png" />
@@ -40,6 +41,7 @@
     <Resource Include="Images\clone-figure.png" />
     <Resource Include="Images\compare.png" />
     <Resource Include="Images\icons8-close-window-24.png" />
+    <Resource Include="Images\icons8-code-fork-24.png" />
     <Resource Include="Images\icons8-compare-50.png" />
     <Resource Include="Images\icons8-console-50.png" />
     <Resource Include="Images\open-file-under-cursor.png" />

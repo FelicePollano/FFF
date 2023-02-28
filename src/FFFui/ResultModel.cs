@@ -1,4 +1,5 @@
 ﻿using Fff.Crawler;
+using FFFui.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -201,6 +202,34 @@ namespace FFFui
         }
     }
 
+    public class OpenHistoryCommand : ICommand
+    {
+        ResultModel model;
+        public OpenHistoryCommand(ResultModel model)
+        {
+            this.model = model;
+        }
+        public event EventHandler? CanExecuteChanged;
+
+        public bool CanExecute(object? parameter)
+        {
+            return RepoHelper.GetRepositoryType(Path.GetDirectoryName(model.FileName)) != RepoHelper.RepoType.None;
+        }
+
+        public void Execute(object? parameter)
+        {
+            try
+            {
+                RepoHelper.GetHistory(model.FileName);
+            }
+            catch (Exception ex)
+            {
+                model.MainViewModel.HasErrors = true;
+                model.MainViewModel.ErrorMessage = ex.Message;
+            }
+        }
+    }
+
     public class ResultModel:INotifyPropertyChanged
     {
         private readonly CompareSourceViewModel csvm;
@@ -213,6 +242,7 @@ namespace FFFui
         public OpenInExplorerCommand OpenInExplorer { get; private set; }
         public OpenPromptHereCommand OpenPromptHere { get; private set; }
         public AddToCompareCommand AddToCompare { get; private set; }
+        public OpenHistoryCommand OpenHistory { get; private set; }
         public ResultModel(CompareSourceViewModel csvm,ViewModel mainViewModel)
         {
             Results=new List<ResultLineModel>();
@@ -222,6 +252,7 @@ namespace FFFui
             OpenInExplorer = new OpenInExplorerCommand(this);
             OpenPromptHere = new OpenPromptHereCommand(this);
             AddToCompare = new AddToCompareCommand(this);
+            OpenHistory = new OpenHistoryCommand(this);
             this.csvm = csvm;
             this.mainViewModel = mainViewModel;
         }
