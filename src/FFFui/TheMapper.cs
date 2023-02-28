@@ -14,7 +14,9 @@ namespace FFFui
        
         static TheMapper()
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Result, ResultLineModel>());
+            var config = new MapperConfiguration(cfg => {
+                                                            cfg.CreateMap<Result, ResultLineModel>();
+                                                        });
             TheMapper.Mapper = new Mapper(config);
         }
         

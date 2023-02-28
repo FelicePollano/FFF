@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,6 +51,7 @@ namespace FFFui.Utils
 
         private static IList<HistoryEntry> GetHistoryGit(string filename)
         {
+            List<HistoryEntry> history = new List<HistoryEntry>();
             var process = new System.Diagnostics.Process();
             process.StartInfo = new System.Diagnostics.ProcessStartInfo
             {
@@ -63,8 +65,19 @@ namespace FFFui.Utils
             };
             process.Start();
             StreamReader reader = process.StandardOutput;
-            string output = reader.ReadToEnd();
-            return null;
+            string line;
+            while (null != (line = reader.ReadLine()))
+            {
+                var tokens = line.Split('|');
+                history.Add(new HistoryEntry() {
+                    Revision=tokens[0],
+                    User=tokens[1],
+                    Date=DateTime.Parse(tokens[2],CultureInfo.InvariantCulture),
+                    Comments=String.Join('|',tokens[3..])
+                
+                });
+            }
+            return history;
         }
 
         static public RepoType GetRepositoryType(string folder)
