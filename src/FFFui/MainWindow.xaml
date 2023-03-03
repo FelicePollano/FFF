@@ -45,7 +45,7 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <local:ResultsView DataContext="{Binding Path=Results}"/>
+                    <local:ResultsView DataContext="{Binding Path=.}"/>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

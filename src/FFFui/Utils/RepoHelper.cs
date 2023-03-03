@@ -24,17 +24,17 @@ namespace FFFui.Utils
             public string User { get; set; }
             public string Comments { get; set; }
         }
-        static public IList<HistoryEntry> GetHistory(string filename)
+        public static void GetHistory(string filename, Action<HistoryEntry> collectEntry)
         {
             var folder = Path.GetDirectoryName(filename);
             var t = GetRepositoryType(folder);
             if (t == RepoType.Git)
             {
-                return GetHistoryGit(filename);
+                 new GitRepository().GetHistory(filename,collectEntry);
             }
             else if (t == RepoType.Hg)
             {
-                return GetHistoryHg(filename);
+                new HgRepository().GetHistory(filename,collectEntry);
             }
             else
             {
@@ -44,41 +44,12 @@ namespace FFFui.Utils
 
         }
 
-        private static IList<HistoryEntry> GetHistoryHg(string filename)
+        private static IList<HistoryEntry> GetHistoryHg(string filename, Action<HistoryEntry> collectEntry)
         {
             throw new NotImplementedException();
         }
 
-        private static IList<HistoryEntry> GetHistoryGit(string filename)
-        {
-            List<HistoryEntry> history = new List<HistoryEntry>();
-            var process = new System.Diagnostics.Process();
-            process.StartInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = "git.exe",
-                Arguments = String.Format($"log --pretty=format:\" % h |% an |% ad |% s\" --date=iso -- \"{filename}\""),
-                UseShellExecute = false,
-                WindowStyle=ProcessWindowStyle.Hidden,
-                RedirectStandardOutput = true,
-                WorkingDirectory = Path.GetDirectoryName(filename)
-
-            };
-            process.Start();
-            StreamReader reader = process.StandardOutput;
-            string line;
-            while (null != (line = reader.ReadLine()))
-            {
-                var tokens = line.Split('|');
-                history.Add(new HistoryEntry() {
-                    Revision=tokens[0],
-                    User=tokens[1],
-                    Date=DateTime.Parse(tokens[2],CultureInfo.InvariantCulture),
-                    Comments=String.Join('|',tokens[3..])
-                
-                });
-            }
-            return history;
-        }
+        
 
         static public RepoType GetRepositoryType(string folder)
         {

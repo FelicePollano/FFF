@@ -51,6 +51,16 @@ namespace FFFui
     }
     public class SearchViewModel : INotifyPropertyChanged
     {
+        public bool HasRepoResults => RepoHistory.Count > 0;
+        public IList<RepoHistoryLineViewModel> RepoHistory { get; private set; }
+        private string historyOfFile;
+
+        public string HistoryOfFile
+        {
+            get { return historyOfFile; }
+            set { historyOfFile = value; PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(nameof(HistoryOfFile))); }
+        }
+
         public ICommand CloseTab { get; private set; }
         public string ToSearch { get; private set; }
         public SearchViewModel(string toSearch, ViewModel mainViewModel)
@@ -59,15 +69,21 @@ namespace FFFui
             this.mainViewModel = mainViewModel;
             Results = new ObservableCollection<ResultModel>();
             CloseTab = new CloseTabCommand(mainViewModel,this);
+            this.RepoHistory = new ObservableCollection<RepoHistoryLineViewModel>();
         }
         public event PropertyChangedEventHandler? PropertyChanged;
         private ObservableCollection<ResultModel> results;
         private readonly ViewModel mainViewModel;
-
+        
         public ObservableCollection<ResultModel> Results
         {
             get { return results; }
             set { results = value; }
+        }
+
+        internal void UpdateHistoryResult()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasRepoResults)));
         }
     }
 }

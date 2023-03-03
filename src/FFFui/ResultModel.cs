@@ -2,6 +2,7 @@
 using FFFui.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -220,7 +221,20 @@ namespace FFFui
         {
             try
             {
-                RepoHelper.GetHistory(model.FileName);
+                model.SearchViewModel.HistoryOfFile = model.FileName;
+                model.SearchViewModel.RepoHistory.Clear();
+                model.SearchViewModel.UpdateHistoryResult();
+                var hasReported = false;
+                RepoHelper.GetHistory(model.FileName, (h) => {
+                    model.SearchViewModel.RepoHistory.Add(TheMapper.Mapper.Map<RepoHelper.HistoryEntry, RepoHistoryLineViewModel>(h));
+                    if (!hasReported)
+                    {
+                        hasReported = true;
+                        model.SearchViewModel.UpdateHistoryResult();
+                    }
+                });
+                
+
             }
             catch (Exception ex)
             {
@@ -234,6 +248,7 @@ namespace FFFui
     {
         private readonly CompareSourceViewModel csvm;
         private readonly ViewModel mainViewModel;
+        private readonly SearchViewModel searchViewModel;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -243,7 +258,7 @@ namespace FFFui
         public OpenPromptHereCommand OpenPromptHere { get; private set; }
         public AddToCompareCommand AddToCompare { get; private set; }
         public OpenHistoryCommand OpenHistory { get; private set; }
-        public ResultModel(CompareSourceViewModel csvm,ViewModel mainViewModel)
+        public ResultModel(CompareSourceViewModel csvm,ViewModel mainViewModel,SearchViewModel searchViewModel)
         {
             Results=new List<ResultLineModel>();
             FileName = String.Empty;
@@ -255,16 +270,20 @@ namespace FFFui
             OpenHistory = new OpenHistoryCommand(this);
             this.csvm = csvm;
             this.mainViewModel = mainViewModel;
+            this.searchViewModel = searchViewModel;
         }
+
         public IList<ResultLineModel> Results { get; set; }
         public string FileName { get; set; }
         public bool IsCompareSource { get => CompareSourceViewModel.FileName1 == FileName || CompareSourceViewModel.FileName2 == FileName; }
         public int CompareSourceOrdinal { get => CompareSourceViewModel.FileName1 == FileName ? 1: (CompareSourceViewModel.FileName2==FileName ? 2:0 );  }
 
         public CompareSourceViewModel CompareSourceViewModel => csvm;
-
+       
         public ViewModel MainViewModel => mainViewModel;
 
+        public SearchViewModel SearchViewModel => searchViewModel;
+        
         public void FireCompareChanged()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCompareSource)));

@@ -127,7 +127,7 @@ namespace FFFui
                 var uiContext = SynchronizationContext.Current;
                 crawler.Report = (results, file) =>
                 {
-                    var rm = new ResultModel(model.CompareSourceViewModel, model) { Results = TheMapper.Mapper.Map<IList<Result>, IList<ResultLineModel>>(results), FileName = file };
+                    var rm = new ResultModel(model.CompareSourceViewModel, model,viewModel) { Results = TheMapper.Mapper.Map<IList<Result>, IList<ResultLineModel>>(results), FileName = file };
                     //this is bad
                     foreach (var rlm in rm.Results)
                     {

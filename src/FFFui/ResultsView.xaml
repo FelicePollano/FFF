@@ -59,7 +59,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
     
-    <ListView Grid.Row="0" ItemsSource="{Binding .}" >
+    <ListView Grid.Row="0" ItemsSource="{Binding Results}" >
         <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
                 <Setter Property="Template">
@@ -169,5 +169,7 @@
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
+
+        <local:FileHistoryView DataContext="{Binding}" Grid.Row="1" MaxHeight="300" Visibility="{Binding HasRepoResults, Converter={StaticResource BoolToVis}}"/>
     </Grid>
 </UserControl>
