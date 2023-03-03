@@ -9,6 +9,7 @@ using System.Windows.Input;
 
 namespace FFFui
 {
+    
     class CloseTabCommand : ICommand
     {
         private readonly ViewModel model;
@@ -62,6 +63,7 @@ namespace FFFui
         }
 
         public ICommand CloseTab { get; private set; }
+       
         public string ToSearch { get; private set; }
         public SearchViewModel(string toSearch, ViewModel mainViewModel)
         {
@@ -69,6 +71,7 @@ namespace FFFui
             this.mainViewModel = mainViewModel;
             Results = new ObservableCollection<ResultModel>();
             CloseTab = new CloseTabCommand(mainViewModel,this);
+            
             this.RepoHistory = new ObservableCollection<RepoHistoryLineViewModel>();
         }
         public event PropertyChangedEventHandler? PropertyChanged;

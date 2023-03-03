@@ -214,7 +214,8 @@ namespace FFFui
 
         public bool CanExecute(object? parameter)
         {
-            return RepoHelper.GetRepositoryType(Path.GetDirectoryName(model.FileName)) != RepoHelper.RepoType.None;
+            string root;
+            return RepoHelper.GetRepositoryType(Path.GetDirectoryName(model.FileName),out root) != RepoHelper.RepoType.None;
         }
 
         public void Execute(object? parameter)

@@ -18,12 +18,22 @@
         <ListView Grid.Row="1"  ItemsSource="{Binding RepoHistory}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Revision}"></TextBlock>
-                        <TextBlock Text="{Binding Date}"></TextBlock>
-                        <TextBlock Text="{Binding User}"></TextBlock>
-                        <TextBlock Text="{Binding Comments}"></TextBlock>
-                    </StackPanel>
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition  Width="120"/>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition  Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock>
+                            <Hyperlink Command="{Binding OpenAtRevision}" CommandParameter="{Binding DataContext.HistoryOfFile, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                <TextBlock FontWeight="Bold" Grid.Column="0" Text="{Binding Revision}"></TextBlock>
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock ToolTip="{Binding Date}" Grid.Column="1"  Text="{Binding Date}"></TextBlock>
+                        <TextBlock ToolTip="{Binding User}" Grid.Column="2"  Text="{Binding User}"></TextBlock>
+                        <TextBlock  Grid.Column="3" Text="{Binding Comments}"></TextBlock>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

@@ -11,6 +11,55 @@ namespace FFFui.Utils
 {
     internal class GitRepository : IRepository
     {
+        private readonly string root;
+
+        public GitRepository(string root)
+        {
+            this.root = root;
+        }
+        public void DumpAtRevision(string filename, string destPath,string rev)
+        {
+            var wdir = Path.GetDirectoryName(filename);
+            using (var outputStream = new StreamWriter(destPath))
+            {
+                var process = new System.Diagnostics.Process();
+                process.StartInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "git.exe",
+                    Arguments = String.Format($"show {rev}:\"{Path.GetRelativePath(root,filename)}\""),
+                    UseShellExecute = false,
+                    //CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    WorkingDirectory = root,
+                    
+
+                };
+               
+               
+                process.EnableRaisingEvents = true;
+                process.Start();
+                process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+                {
+                    if (e.Data != null)
+                    {
+                        outputStream.WriteLine(e.Data);
+                    }
+                });
+                process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+                {
+                    if (e.Data != null)
+                    {
+                        outputStream.WriteLine(e.Data);
+                    }
+                });
+                process.BeginErrorReadLine();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+            }
+           
+        }
+
         public void GetHistory(string filename, Action<RepoHelper.HistoryEntry> collectEntry)
         {
             var process = new System.Diagnostics.Process();
@@ -19,7 +68,7 @@ namespace FFFui.Utils
                 FileName = "git.exe",
                 Arguments = String.Format($"log --pretty=format:\" % h |% an |% ad |% s\" --date=iso -- \"{filename}\""),
                 UseShellExecute = false,
-                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 WorkingDirectory = Path.GetDirectoryName(filename)
 
@@ -32,7 +81,7 @@ namespace FFFui.Utils
                 var tokens = line.Split('|');
                 collectEntry(new RepoHelper.HistoryEntry()
                 {
-                    Revision = tokens[0],
+                    Revision = tokens[0].Trim(),
                     User = tokens[1],
                     Date = DateTime.Parse(tokens[2], CultureInfo.InvariantCulture),
                     Comments = String.Join('|', tokens[3..])

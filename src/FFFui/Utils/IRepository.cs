@@ -10,5 +10,6 @@ namespace FFFui.Utils
     public interface IRepository
     {
         void GetHistory(string filename, Action<RepoHelper.HistoryEntry> collectEntry);
+        void DumpAtRevision(string filename, string destPath, string rev);
     }
 }

@@ -24,13 +24,32 @@ namespace FFFui.Utils
             public string User { get; set; }
             public string Comments { get; set; }
         }
+        public static void  DumpAtRevision(string filename, string destPath, string rev)
+        {
+            var folder = Path.GetDirectoryName(filename);
+            string root;
+            var t = GetRepositoryType(folder, out root);
+            if (t == RepoType.Git)
+            {
+                new GitRepository(root).DumpAtRevision(filename, destPath, rev);
+            }
+            else if (t == RepoType.Hg)
+            {
+                new HgRepository().DumpAtRevision(filename, destPath, rev);
+            }
+            else
+            {
+                throw new Exception("Unsupported repository type, or no repository");
+            }
+        }
         public static void GetHistory(string filename, Action<HistoryEntry> collectEntry)
         {
             var folder = Path.GetDirectoryName(filename);
-            var t = GetRepositoryType(folder);
+            string root;
+            var t = GetRepositoryType(folder,out root);
             if (t == RepoType.Git)
             {
-                 new GitRepository().GetHistory(filename,collectEntry);
+                 new GitRepository(root).GetHistory(filename,collectEntry);
             }
             else if (t == RepoType.Hg)
             {
@@ -51,23 +70,26 @@ namespace FFFui.Utils
 
         
 
-        static public RepoType GetRepositoryType(string folder)
+        static public RepoType GetRepositoryType(string folder,out string root)
         {
             if (Directory.Exists(Path.Combine(folder, ".hg")))
             {
+                root = folder;
                 return RepoType.Hg;
             }
             else if (Directory.Exists(Path.Combine(folder, ".git")))
             {
+                root = folder;
                 return RepoType.Git;
             }
             else {
                 if (Directory.GetParent(folder) != null)
                 {
-                    return GetRepositoryType(Directory.GetParent(folder).FullName);
+                    return GetRepositoryType(Directory.GetParent(folder).FullName,out root);
                 }
                 else
                 {
+                    root = null;
                     return RepoType.None;
                 }
              }
