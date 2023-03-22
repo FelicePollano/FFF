@@ -20,23 +20,25 @@ namespace FFFui.Utils
         public void DumpAtRevision(string filename, string destPath,string rev)
         {
             var wdir = Path.GetDirectoryName(filename);
-            using (var outputStream = new StreamWriter(destPath))
+            var opt = new FileStreamOptions() { Access= FileAccess.ReadWrite, Mode=FileMode.Create};
+            using (var outputStream = new StreamWriter(destPath, new UTF8Encoding(false),opt))
             {
+
                 var process = new System.Diagnostics.Process();
                 process.StartInfo = new System.Diagnostics.ProcessStartInfo
                 {
                     FileName = "git.exe",
-                    Arguments = String.Format($"show {rev}:\"{Path.GetRelativePath(root,filename)}\""),
+                    Arguments = String.Format($"show {rev}:\"{Path.GetRelativePath(root, filename).Replace("\\", "/")}\""),
                     UseShellExecute = false,
                     //CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     WorkingDirectory = root,
-                    
-
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8
                 };
-               
-               
+
+
                 process.EnableRaisingEvents = true;
                 process.Start();
                 process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
@@ -56,6 +58,7 @@ namespace FFFui.Utils
                 process.BeginErrorReadLine();
                 process.BeginOutputReadLine();
                 process.WaitForExit();
+                outputStream.Flush();
             }
            
         }
