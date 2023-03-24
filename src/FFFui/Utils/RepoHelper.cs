@@ -35,7 +35,7 @@ namespace FFFui.Utils
             }
             else if (t == RepoType.Hg)
             {
-                new HgRepository().DumpAtRevision(filename, destPath, rev);
+                new HgRepository(root).DumpAtRevision(filename, destPath, rev);
             }
             else
             {
@@ -53,7 +53,7 @@ namespace FFFui.Utils
             }
             else if (t == RepoType.Hg)
             {
-                new HgRepository().GetHistory(filename,collectEntry);
+                new HgRepository(root).GetHistory(filename,collectEntry);
             }
             else
             {
