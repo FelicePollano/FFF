@@ -18,7 +18,27 @@ namespace FFFui.Utils
         }
         public void DumpAtRevision(string filename, string destPath,string rev)
         {
-            throw new NotImplementedException();
+            var process = new System.Diagnostics.Process();
+            process.StartInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "hg.exe",
+                Arguments = $"cat -r {rev} {Path.GetFileName(filename)}",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                WorkingDirectory = Path.GetDirectoryName(filename)
+
+            };
+            process.Start();
+            StreamReader reader = process.StandardOutput;
+            string line;
+            using (var wr = new StreamWriter(destPath))
+            {
+                while (null != (line = reader.ReadLine()))
+                {
+                    wr.WriteLine(line);
+                }
+            }
         }
 
         public void GetHistory(string filename, Action<RepoHelper.HistoryEntry> collectEntry)
