@@ -108,9 +108,9 @@ namespace FFFui
     }
     public class AddToCompareCommand:ICommand
     {
-        private readonly ResultModel model;
+        private readonly IHasCompareSource model;
 
-        public AddToCompareCommand(ResultModel model)
+        public AddToCompareCommand(IHasCompareSource model)
         {
             this.model = model;
         }
@@ -233,6 +233,11 @@ namespace FFFui
                         hasReported = true;
                         model.SearchViewModel.UpdateHistoryResult();
                     }
+                    foreach(var rh in model.SearchViewModel.RepoHistory)
+                    {
+                        rh.MainViewModel = model.MainViewModel;
+                        rh.CompareSourceViewModel = model.CompareSourceViewModel;
+                    }
                 });
                 
 
@@ -244,8 +249,7 @@ namespace FFFui
             }
         }
     }
-
-    public class ResultModel:INotifyPropertyChanged
+    public class ResultModel : INotifyPropertyChanged, IHasCompareSource
     {
         private readonly CompareSourceViewModel csvm;
         private readonly ViewModel mainViewModel;
@@ -259,9 +263,9 @@ namespace FFFui
         public OpenPromptHereCommand OpenPromptHere { get; private set; }
         public AddToCompareCommand AddToCompare { get; private set; }
         public OpenHistoryCommand OpenHistory { get; private set; }
-        public ResultModel(CompareSourceViewModel csvm,ViewModel mainViewModel,SearchViewModel searchViewModel)
+        public ResultModel(CompareSourceViewModel csvm, ViewModel mainViewModel, SearchViewModel searchViewModel)
         {
-            Results=new List<ResultLineModel>();
+            Results = new List<ResultLineModel>();
             FileName = String.Empty;
             OpenFile = new OpenFileCommand(this);
             CopyLink = new CopyLinkCommand(this);
@@ -277,14 +281,14 @@ namespace FFFui
         public IList<ResultLineModel> Results { get; set; }
         public string FileName { get; set; }
         public bool IsCompareSource { get => CompareSourceViewModel.FileName1 == FileName || CompareSourceViewModel.FileName2 == FileName; }
-        public int CompareSourceOrdinal { get => CompareSourceViewModel.FileName1 == FileName ? 1: (CompareSourceViewModel.FileName2==FileName ? 2:0 );  }
+        public int CompareSourceOrdinal { get => CompareSourceViewModel.FileName1 == FileName ? 1 : (CompareSourceViewModel.FileName2 == FileName ? 2 : 0); }
 
         public CompareSourceViewModel CompareSourceViewModel => csvm;
-       
+
         public ViewModel MainViewModel => mainViewModel;
 
         public SearchViewModel SearchViewModel => searchViewModel;
-        
+
         public void FireCompareChanged()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCompareSource)));

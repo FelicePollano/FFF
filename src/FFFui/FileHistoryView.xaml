@@ -6,6 +6,22 @@
              xmlns:local="clr-namespace:FFFui"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <BitmapImage x:Key="AddToCompare" UriSource="Images/compare.png"></BitmapImage>
+        <Style x:Key="ButtonFlat" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="2,0,2,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="BorderCompare" TargetType="Border">
+            <Setter Property="Margin" Value="10,0,0,0"/>
+
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Background" Value="LightGreen"/>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24"></RowDefinition>
@@ -21,8 +37,10 @@
                     <Grid >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition  Width="120"/>
+                            <ColumnDefinition  Width="36"/>
+                            <ColumnDefinition  Width="Auto"/>
                             <ColumnDefinition Width="160"/>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="200"/>
                             <ColumnDefinition  Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock>
@@ -30,9 +48,27 @@
                                 <TextBlock FontWeight="Bold" Grid.Column="0" Text="{Binding Revision}"></TextBlock>
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock ToolTip="{Binding Date}" Grid.Column="1"  Text="{Binding Date}"></TextBlock>
-                        <TextBlock ToolTip="{Binding User}" Grid.Column="2"  Text="{Binding User}"></TextBlock>
-                        <TextBlock  Grid.Column="3" Text="{Binding Comments}"></TextBlock>
+                        <Button ToolTip="Use as compare item" Grid.Column="1" Style="{StaticResource ButtonFlat}"  Command="{Binding AddToCompare}" >
+                            <Image Width="16" Height="16" Source="{StaticResource AddToCompare}"></Image>
+                        </Button>
+                        <StackPanel Grid.Column="2"   Orientation="Horizontal" Visibility="{Binding IsCompareSource, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Margin="20,0,0,0" FontWeight="Bold">========></TextBlock>
+                            <Border Style="{StaticResource BorderCompare}" >
+                                <TextBlock>
+                                   
+                                    <Hyperlink Command="{Binding Path=CompareSourceViewModel.RunCompare}">
+                                        <TextBlock FontSize="10" FontWeight="Bold">
+                                            <Run>Compare</Run>
+                                            <Run Text="{Binding CompareSourceOrdinal, Mode=OneWay}"></Run>
+                                        </TextBlock>
+                                    </Hyperlink>
+                                            
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
+                        <TextBlock ToolTip="{Binding Date}" Grid.Column="3"  Text="{Binding Date}"></TextBlock>
+                        <TextBlock ToolTip="{Binding User}" Grid.Column="4"  Text="{Binding User}"></TextBlock>
+                        <TextBlock  Grid.Column="5" Text="{Binding Comments}"></TextBlock>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
