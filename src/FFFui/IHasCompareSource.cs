@@ -8,7 +8,8 @@ namespace FFFui
     {
         CompareSourceViewModel CompareSourceViewModel { get; }
         public ViewModel MainViewModel { get; }
-        public string FileName { get; set; }
+        public string FileName { get;  }
         void FireCompareChanged();
+        void BeforeAddToCompare();
     }
 }

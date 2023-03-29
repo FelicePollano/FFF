@@ -13,5 +13,5 @@ open-atline-cmd="%programfiles%\\Microsoft Visual Studio\\2022\\Professional\\Co
 open-atline-cmdline="/edit \"%file%\" /command \"edit.goto %line%\""
 
 [compare]
-cmd="%programfiles%\\KDiff3\\kdiff3.exe"
+cmd="%programfiles%\\Meld\\Meld.exe"
 cmdline="\"%file1%\" \"%file2%\""

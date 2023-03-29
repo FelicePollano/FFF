@@ -16,7 +16,7 @@
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
         <Style x:Key="BorderCompare" TargetType="Border">
-            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="Margin" Value="10,0,10,0"/>
 
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Background" Value="LightGreen"/>
@@ -52,7 +52,7 @@
                             <Image Width="16" Height="16" Source="{StaticResource AddToCompare}"></Image>
                         </Button>
                         <StackPanel Grid.Column="2"   Orientation="Horizontal" Visibility="{Binding IsCompareSource, Converter={StaticResource BoolToVis}}">
-                            <TextBlock Margin="20,0,0,0" FontWeight="Bold">========></TextBlock>
+                            
                             <Border Style="{StaticResource BorderCompare}" >
                                 <TextBlock>
                                    

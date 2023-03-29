@@ -126,6 +126,8 @@ namespace FFFui
         {
             try
             {
+                model.BeforeAddToCompare();
+
                 if (model.FileName == model.CompareSourceViewModel.FileName1 ||
                     model.FileName == model.CompareSourceViewModel.FileName2
                     )
@@ -237,6 +239,7 @@ namespace FFFui
                     {
                         rh.MainViewModel = model.MainViewModel;
                         rh.CompareSourceViewModel = model.CompareSourceViewModel;
+                        rh.OriginalFile = model.FileName;
                     }
                 });
                 
@@ -293,6 +296,11 @@ namespace FFFui
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCompareSource)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompareSourceOrdinal)));
+        }
+
+        public void BeforeAddToCompare()
+        {
+            //nothing to do before compare
         }
     }
 }

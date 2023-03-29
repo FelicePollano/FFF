@@ -66,10 +66,11 @@ namespace FFFui
 
         public string FileName { 
             get => ShadowFile;
-            set=>throw new NotImplementedException();
         }
         public bool IsCompareSource { get => (CompareSourceViewModel.FileName1 == FileName || CompareSourceViewModel.FileName2 == FileName) && !string.IsNullOrEmpty(FileName); }
         public int CompareSourceOrdinal { get => CompareSourceViewModel.FileName1 == FileName ? 1 : (CompareSourceViewModel.FileName2 == FileName ? 2 : 0); }
+        public string OriginalFile { get;  set; }
+
         public void FireCompareChanged()
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCompareSource)));
@@ -83,6 +84,14 @@ namespace FFFui
                 var destFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 ShadowFile = Path.ChangeExtension(destFile, Path.GetExtension(filename));
                 RepoHelper.DumpAtRevision(filename, ShadowFile, Revision);
+            }
+        }
+
+        public void BeforeAddToCompare()
+        {
+            if (null == FileName)
+            {
+                EnsureShadowFile(OriginalFile);
             }
         }
     }
