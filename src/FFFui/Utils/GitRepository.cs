@@ -59,6 +59,7 @@ namespace FFFui.Utils
                 process.BeginOutputReadLine();
                 process.WaitForExit();
                 outputStream.Flush();
+                TempFileColletor.Instance.AddFileToCollect(destPath);
             }
            
         }

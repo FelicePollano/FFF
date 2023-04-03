@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Fff.Crawler;
+using FFFui.Utils;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,7 +24,11 @@ namespace FFFui
             base.OnStartup(e);
             
         }
-       
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            TempFileColletor.Instance.Collect();
+        }
     }
     
 }

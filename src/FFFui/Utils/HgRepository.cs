@@ -39,6 +39,7 @@ namespace FFFui.Utils
                     wr.WriteLine(line);
                 }
             }
+            TempFileColletor.Instance.AddFileToCollect(destPath);
         }
 
         public void GetHistory(string filename, Action<RepoHelper.HistoryEntry> collectEntry)
