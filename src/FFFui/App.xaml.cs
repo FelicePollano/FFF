@@ -27,7 +27,7 @@ namespace FFFui
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            TempFileColletor.Instance.Collect();
+            TempFileCollector.Instance.Collect();
         }
     }
     

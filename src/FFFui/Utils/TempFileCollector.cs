@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace FFFui.Utils
 {
-    internal class TempFileColletor
+    internal class TempFileCollector
     {
         string collectListPath;
-        static TempFileColletor()
+        static TempFileCollector()
         {
-            Instance = new TempFileColletor();
+            Instance = new TempFileCollector();
             
         }
-        private TempFileColletor()
+        private TempFileCollector()
         {
             collectListPath = Path.Combine(Path.GetTempPath(), ".fffremove.me");
         }
-        public static TempFileColletor Instance { get; private set; }
+        public static TempFileCollector Instance { get; private set; }
 
         public void AddFileToCollect(string file)
         {
