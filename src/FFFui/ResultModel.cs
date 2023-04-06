@@ -228,21 +228,29 @@ namespace FFFui
                 model.SearchViewModel.RepoHistory.Clear();
                 model.SearchViewModel.UpdateHistoryResult();
                 var hasReported = false;
+                Dictionary<string, RepoHelper.HistoryEntry> cachedItems = new Dictionary<string, RepoHelper.HistoryEntry>();
                 RepoHelper.GetHistory(model.FileName, (h) => {
                     model.SearchViewModel.RepoHistory.Add(TheMapper.Mapper.Map<RepoHelper.HistoryEntry, RepoHistoryLineViewModel>(h));
+                    cachedItems[h.Revision] = h;
                     if (!hasReported)
                     {
                         hasReported = true;
                         model.SearchViewModel.UpdateHistoryResult();
                     }
-                    foreach(var rh in model.SearchViewModel.RepoHistory)
-                    {
-                        rh.MainViewModel = model.MainViewModel;
-                        rh.CompareSourceViewModel = model.CompareSourceViewModel;
-                        rh.OriginalFile = model.FileName;
-                    }
                 });
-                
+               
+                foreach (var rh in model.SearchViewModel.RepoHistory)
+                {
+                    rh.MainViewModel = model.MainViewModel;
+                    rh.CompareSourceViewModel = model.CompareSourceViewModel;
+                    rh.OriginalFile = model.FileName;
+                    //this is to fix comment on HG being in two lines... so we update original comment after entity is converted to viewmodel...
+                    if (cachedItems.ContainsKey(rh.Revision))
+                    {
+                        rh.Comments = cachedItems[rh.Revision].Comments;
+                        rh.FireCommentChanged();
+                    }
+                }
 
             }
             catch (Exception ex)

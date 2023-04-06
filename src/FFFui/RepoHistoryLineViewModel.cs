@@ -76,6 +76,10 @@ namespace FFFui
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCompareSource)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CompareSourceOrdinal)));
         }
+        public void FireCommentChanged()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comments)));
+        }
 
         public void EnsureShadowFile(string filename)
         {
