@@ -1,12 +1,13 @@
-﻿<Window x:Class="FFFui.MainWindow"
+﻿<mah:MetroWindow x:Class="FFFui.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:FFFui"
         Name="mainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1200">
+        Title="Fast Find in Files" Height="800" Width="1200">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <Style  TargetType="ListView">
@@ -26,8 +27,8 @@
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"></RowDefinition>
-            <RowDefinition Height="32"></RowDefinition>
+            <RowDefinition Height="36"></RowDefinition>
+            <RowDefinition Height="36"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="24"></RowDefinition>
         </Grid.RowDefinitions>
@@ -35,12 +36,14 @@
         <TabControl  SelectedIndex="{Binding Path=Selected}" Grid.Row="2" ItemsSource="{Binding Tabs}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
+                    <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource MahApps.Brushes.Button.Border}">
                     <StackPanel Orientation="Horizontal" Height="21">
-                        <TextBlock Text="{Binding ToSearch}"/>
+                        <TextBlock FontSize="14" FontWeight="DemiBold" Text="{Binding ToSearch}"/>
                         <Button Style="{StaticResource ButtonFlat}"  Command="{Binding CloseTab}">
                             <Image Source="{StaticResource CloseTab}" Width="16" Height="16"/>
                         </Button>
                     </StackPanel>
+                    </Border>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
@@ -77,4 +80,4 @@
         </StackPanel>
 
     </Grid>
-</Window>
+</mah:MetroWindow>

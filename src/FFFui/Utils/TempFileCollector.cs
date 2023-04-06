@@ -31,6 +31,10 @@ namespace FFFui.Utils
         public void Collect()
         {
             bool noError = true;
+            if(!File.Exists(collectListPath))
+            {
+                return;
+            }
             using (var sr = new StreamReader(collectListPath))
             {
                 string fileName;
