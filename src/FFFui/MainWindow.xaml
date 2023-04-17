@@ -16,6 +16,12 @@
             <Setter Property="BorderThickness" Value="0"></Setter>
            
         </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontWeight" Value="DemiBold"></Setter>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="FontWeight" Value="DemiBold"></Setter>
+        </Style>
         <Style x:Key="ButtonFlat" TargetType="Button">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -58,16 +64,16 @@
             <local:ErrorPopup></local:ErrorPopup>
         </Popup>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label>Search:</Label>
+            <Label VerticalAlignment="Center">Search:</Label>
             <TextBox Margin="2,2,2,2" Width="290" Text="{Binding Path=ToSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <e:Interaction.Behaviors>
                     <localbhv:SelectOnFocusBehavior/>
                 </e:Interaction.Behaviors>
-            </TextBox>
-            <CheckBox Margin="2,6,2,2" IsChecked="{Binding Path=UseRegex}">Regex</CheckBox>
-            <CheckBox Margin="2,6,2,2"  IsChecked="{Binding Path=MatchCase}">Match case</CheckBox>
-            <CheckBox Margin="2,6,2,2" IsChecked="{Binding Path=NameOnly}">Name only</CheckBox>
-            <Label>File Types:</Label>
+            </TextBox> 
+            <CheckBox Margin="2,12,2,5" IsChecked="{Binding Path=UseRegex}">Regex</CheckBox>
+            <CheckBox Margin="2,12,2,5"  IsChecked="{Binding Path=MatchCase}">Match case</CheckBox>
+            <CheckBox Margin="2,12,2,5" IsChecked="{Binding Path=NameOnly}">Name only</CheckBox>
+            <Label VerticalAlignment="Center" Margin="20,0,0,0">File Types:</Label>
             <TextBox Margin="2,2,2,2" Width="140" Text="{Binding Path=Types, Mode=TwoWay}">
                 <e:Interaction.Behaviors>
                     <localbhv:SelectOnFocusBehavior/>
@@ -76,8 +82,8 @@
             <Button HorizontalAlignment="Right" Margin="2,4,2,4" Command="{Binding Path=Search}" >Search</Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label>Path:</Label>
-            <TextBox Margin="2,2,2,2" Width="490" Text="{Binding Path=Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <Label Margin="0,0,11,0" VerticalAlignment="Center">Path:</Label>
+            <TextBox Margin="2,2,2,2" Width="613" Text="{Binding Path=Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <e:Interaction.Behaviors>
                     <localbhv:SelectOnFocusBehavior/>
                 </e:Interaction.Behaviors>
