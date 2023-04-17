@@ -70,9 +70,9 @@
                     <localbhv:SelectOnFocusBehavior/>
                 </e:Interaction.Behaviors>
             </TextBox> 
-            <CheckBox Margin="2,12,2,5" IsChecked="{Binding Path=UseRegex}">Regex</CheckBox>
-            <CheckBox Margin="2,12,2,5"  IsChecked="{Binding Path=MatchCase}">Match case</CheckBox>
-            <CheckBox Margin="2,12,2,5" IsChecked="{Binding Path=NameOnly}">Name only</CheckBox>
+            <CheckBox Margin="2,11,2,5" IsChecked="{Binding Path=UseRegex}">Regex</CheckBox>
+            <CheckBox Margin="2,11,2,5"  IsChecked="{Binding Path=MatchCase}">Match case</CheckBox>
+            <CheckBox Margin="2,11,2,5" IsChecked="{Binding Path=NameOnly}">Name only</CheckBox>
             <Label VerticalAlignment="Center" Margin="20,0,0,0">File Types:</Label>
             <TextBox Margin="2,2,2,2" Width="140" Text="{Binding Path=Types, Mode=TwoWay}">
                 <e:Interaction.Behaviors>
