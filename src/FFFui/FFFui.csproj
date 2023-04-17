@@ -23,15 +23,13 @@
     <Content Include="Images\eskimo.ico" />
   </ItemGroup>
 	<ItemGroup>
-	  <None Include=".fffui\config">
+	  <None Include=".fffui\config.yaml">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Include=".fffui\config.yaml" />
 	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
-    <PackageReference Include="SImpleConfigParser" Version="1.0.0" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageReference Include="YamlDotNet" Version="13.0.2" />
   </ItemGroup>

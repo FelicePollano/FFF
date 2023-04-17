@@ -1,5 +1,5 @@
 ﻿
-using SimpleConfigParser;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,15 +7,34 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace FFFui
 {
+    public class Editor
+    {
+        public string[] Ext { get; set; }
+        public string OpenCommand { get; set; }
+        public string CmdLine { get; set; }
+        public string CmdLineAt { get; set; }
+    }
+    public class CompareTool
+    {
+        public string OpenCommand { get; set; }
+        public string CmdLine { get; set; }
+    }
+    internal class YamlSettings
+    {
+        public Editor[] Editors {get;set;}
+        public Editor DefaultEditor { get; set; }
+        public CompareTool Compare { get; set; }
+    }
     internal class Settings
     {
-        Dictionary<string, Tuple<string, string>> extensionMapFile = new Dictionary<string, Tuple<string, string>>();
-        Dictionary<string, Tuple<string, string>> extensionMapAtLine = new Dictionary<string, Tuple<string, string>>();
-        Tuple<string, string> compareCmd = new Tuple<string, string>(null, null);
         static Settings instance;
+        YamlSettings configuration;
         public static Settings Instance
         {
             get
@@ -30,86 +49,37 @@ namespace FFFui
         }
         private Settings()
         {
-            var cfgPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".fffui/config");
-            Configuration config = new Configuration();
-            using(var sr = new StreamReader(cfgPath))
+            var cfgPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".fffui/config.yaml");
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(YamlDotNet.Serialization.NamingConventions.HyphenatedNamingConvention.Instance)
+                .Build();
+            using (var sr1 = new StreamReader(cfgPath))
             {
-                config.Add(sr.ReadToEnd());
-            }
-
-            if (config.Sections.ContainsKey("compare"))
-            {
-                compareCmd = new Tuple<string, string>(config.Sections["compare"]["cmd"], config.Sections["compare"]["cmdline"]);
-            }
-
-            if (config.Sections.ContainsKey("extension"))
-            {
-                if (config.Sections["extension"].ContainsKey("open-cmd"))
-                {
-                    var cmdline = "";
-                    if (config.Sections["extension"].ContainsKey("open-cmdline"))
-                    {
-                        cmdline = config.Sections["extension"]["open-cmdline"];
-                    }
-                    extensionMapFile["<default>"] = new Tuple<string,string>(config.Sections["extension"]["open-cmd"],cmdline);
-                }
-                if (config.Sections["extension"].ContainsKey("open-atline-cmd"))
-                {
-                    var cmdline = "";
-                    if (config.Sections["extension"].ContainsKey("open-atline-cmdline"))
-                    {
-                        cmdline = config.Sections["extension"]["open-atline-cmdline"];
-                    }
-                    extensionMapAtLine["<default>"] = new Tuple<string, string>(config.Sections["extension"]["open-atline-cmd"], cmdline);
-                }
-                foreach (var sub in config.Sections["extension"].Sections.Keys)
-                {
-                    foreach (var ext in sub.Split(','))
-                    {
-                        if (config.Sections["extension"].Sections[sub].ContainsKey("open-cmd"))
-                        {
-                            var cmdline = "";
-                            if (config.Sections["extension"].Sections[sub].ContainsKey("open-cmdline"))
-                            {
-                                cmdline = config.Sections["extension"].Sections[sub]["open-cmdline"];
-                            }
-                            extensionMapFile[ext] = new Tuple<string, string>(config.Sections["extension"].Sections[sub]["open-cmd"], cmdline);
-                        }
-                        if (config.Sections["extension"].Sections[sub].ContainsKey("open-atline-cmd"))
-                        {
-                            var cmdline = "";
-                            if (config.Sections["extension"].Sections[sub].ContainsKey("open-atline-cmdline"))
-                            {
-                                cmdline = config.Sections["extension"].Sections[sub]["open-atline-cmdline"];
-                            }
-                            extensionMapAtLine[ext] = new Tuple<string, string>(config.Sections["extension"].Sections[sub]["open-atline-cmd"], cmdline);
-                        }
-                    }
-                }
+                configuration = deserializer.Deserialize<YamlSettings>(sr1);
             }
         }
         public Tuple<string, string> GetCommandForCompare()
         {
-            return compareCmd;
+            return new Tuple<string,string>(configuration.Compare.OpenCommand,configuration.Compare.CmdLine);
         }
         public Tuple<string,string> GetCommandLineForOpeningAtLine(string extensionWithoutDot)
         {
-            return GetCmd(extensionWithoutDot, extensionMapAtLine);
+            foreach (var editor in configuration.Editors)
+            {
+                if (editor.Ext.Contains(extensionWithoutDot))
+                    return new Tuple<string, string>(editor.OpenCommand, editor.CmdLineAt);
+            }
+            return new Tuple<string, string>(configuration.DefaultEditor.OpenCommand, configuration.DefaultEditor.CmdLineAt);
         }
-
-        private static Tuple<string, string> GetCmd(string extensionWithoutDot, Dictionary<string, Tuple<string, string>> dict)
-        {
-            if (dict.ContainsKey(extensionWithoutDot))
-                return dict[extensionWithoutDot];
-            if (dict.ContainsKey("<default>"))
-                return dict["<default>"];
-            throw new Exception($"Can't handle extension .{extensionWithoutDot}");
-        }
-
        
         public Tuple<string,string> GetCommandLineForOpening(string extensionWithoutDot)
         {
-            return GetCmd(extensionWithoutDot, extensionMapAtLine);
+            foreach (var editor in configuration.Editors)
+            {
+                if (editor.Ext.Contains(extensionWithoutDot))
+                    return new Tuple<string, string>(editor.OpenCommand, editor.CmdLine);
+            }
+            return new Tuple<string, string>(configuration.DefaultEditor.OpenCommand, configuration.DefaultEditor.CmdLine);
         }
     }
 }

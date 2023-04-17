@@ -16,29 +16,22 @@
 #[compare]
 #cmd="%programfiles%\\Meld\\Meld.exe"
 #cmdline="\"%file1%\" \"%file2%\""
-config:
- - editor:
-   ext:
-    - cs
-    - cpp
-    - h
-    - rc
-    - c
-    - xaml
-    - xml
-    - xslt
-    - sql
+editors:
+ - ext: [cs,cpp,h,rc,c,xaml,xml,xslt,sql]
    open-command: "%programfiles%\\Microsoft Visual Studio\\2022\\Preview\\Common7\\IDE\\devenv.exe"
-   cmdline: "/edit \"%file%\""
-   atline-cmdline: "/edit \"%file%\" /command \"edit.goto %line%\""
- - editor:
-   ext: #default, match other extensions
-   open-command: "%programfiles%\\Microsoft VS Code\\Code.exe"
-   cmdline: "\"%file%\""
-   atline-cmdline: "--goto \"%file%\":%line%:1"
+   cmd-line: "/edit \"%file%\""
+   cmd-line-at: "/edit \"%file%\" /command \"edit.goto %line%\""
+
+default-editor:
+ ext: #default, match other extensions
+ open-command: "%programfiles%\\Microsoft VS Code\\Code.exe"
+ cmd-line: "\"%file%\""
+ cmd-line-at: "--goto \"%file%\":%line%:1"
+
+
 compare:
- open-command: "%programfiles%\\Meld\\Meld.exe"
- cmdline: "\"%file1%\" \"%file2%\""
+  open-command: "%programfiles%\\Meld\\Meld.exe"
+  cmd-line: "\"%file1%\" \"%file2%\""
 
 
 
