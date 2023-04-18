@@ -19,7 +19,11 @@
             <Setter Property="Margin" Value="10,0,10,0"/>
 
             <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Background" Value="LightGreen"/>
+            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Badged.Background}"></Setter>
+            
+        </Style>
+        <Style x:Key="TextBlockCompare" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Badged.Foreground}"></Setter>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -57,7 +61,7 @@
                                 <TextBlock>
                                    
                                     <Hyperlink Command="{Binding Path=CompareSourceViewModel.RunCompare}">
-                                        <TextBlock FontSize="10" FontWeight="Bold">
+                                        <TextBlock Style="{StaticResource TextBlockCompare}"  FontSize="10" FontWeight="Bold">
                                             <Run>Compare</Run>
                                             <Run Text="{Binding CompareSourceOrdinal, Mode=OneWay}"></Run>
                                         </TextBlock>

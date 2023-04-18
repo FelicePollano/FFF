@@ -70,7 +70,7 @@
                     <localbhv:SelectOnFocusBehavior/>
                 </e:Interaction.Behaviors>
             </TextBox> 
-            <CheckBox Margin="2,11,2,5" IsChecked="{Binding Path=UseRegex}">Regex</CheckBox>
+            <CheckBox Margin="22,11,2,5" IsChecked="{Binding Path=UseRegex}">Regex</CheckBox>
             <CheckBox Margin="2,11,2,5"  IsChecked="{Binding Path=MatchCase}">Match case</CheckBox>
             <CheckBox Margin="2,11,2,5" IsChecked="{Binding Path=NameOnly}">Name only</CheckBox>
             <Label VerticalAlignment="Center" Margin="20,0,0,0">File Types:</Label>
@@ -79,7 +79,7 @@
                     <localbhv:SelectOnFocusBehavior/>
                 </e:Interaction.Behaviors>
             </TextBox>
-            <Button HorizontalAlignment="Right" Margin="2,4,2,4" Command="{Binding Path=Search}" >Search</Button>
+            <Button HorizontalAlignment="Right" Margin="2,4,2,4" Command="{Binding Path=Search}" IsDefault="True" >Search</Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Label Margin="0,0,11,0" VerticalAlignment="Center">Path:</Label>
