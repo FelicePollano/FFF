@@ -4,7 +4,7 @@
 - [Command line](#command-line)
 - [User Interface](#user-interface)
 - [VS Code addin](#vscode-addin)
-- [Tool build instructions](#tool-buld)
+- [Tool build instructions](#tool-build)
 - [Efficency](#efficency)
 
 
