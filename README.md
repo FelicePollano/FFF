@@ -1,6 +1,13 @@
 # FFF
 ## Fast Find in Files
 
+- [Command line](#command-line)
+- [User Interface](#user-interface)
+- [VS Code addin](#vscode-addin)
+- [Tool build instructions](#tool-buld)
+- [Efficency](#efficency)
+
+
 ### Command line
 Fast find in file is a command line utility that uses asynchronous and concurrecny capability to crawl local files for specific string as fast as possible.
 Goal is to concentrate all computing power into searching the string, in order to report results as fast as possible.
@@ -26,6 +33,7 @@ Options:
   --version              Show version information
   -?, -h, --help         Show help and usage information
 ```
+
 ### User Interface
 Eventually FFF has an user interface, source in src/FFFui. It allows to collect multiple result, open file and open at line with your preferred editor ( manual configuration in .fffui/config.yaml file), compare across search results, but even across repository history of the file ( Git anf Hg repository support ).
 ![screenshot](https://github.com/FelicePollano/FFF/blob/main/src/screenshots/s1.png)
@@ -51,13 +59,13 @@ This will produce a vsix with the version according to what is in package.json.
 The vsix can then be installed in vscode by the menu Extensions/Triple Dot/Install from vsix...
 
 
-### tool build
+### Tool build
 In order to build the toolin a single file working without dependencies:
 
 
 - Win64: dotnet publish -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesInSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -c release
 
-### efficency
+### Efficency
 By using concurrency and multithreading all resources are optimized to make search as fast as possible.
 Here below an example CPU usage during a search:
 ![image](https://user-images.githubusercontent.com/73569/112138701-20865680-8bd2-11eb-921a-aaa921bc5852.png)
